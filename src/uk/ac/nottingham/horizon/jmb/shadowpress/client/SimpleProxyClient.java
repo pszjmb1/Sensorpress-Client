@@ -48,14 +48,14 @@ public class SimpleProxyClient {
 	    client.setConfig(config);
 	    
 	    //used for metaWeblog.getRecentPosts
-	    //Object[] params = new Object[]{new Integer(1),user,password,new Integer(10)};
+	    Object[] params = new Object[]{new Integer(1),user,password,new Integer(10)};
 	    
 	    //used for wp.getAuthors
-	    Object[] params = new Object[]{new Integer(1),user,password};
+	    //Object[] params = new Object[]{new Integer(1),user,password};
 	    
 	    try {
-			//Object result[] = (Object[])client.execute("metaWeblog.getRecentPosts", params);
-	    	Object result[] = (Object[])client.execute("wp.getAuthors", params);
+			Object result[] = (Object[])client.execute("metaWeblog.getRecentPosts", params);
+	    	//Object result[] = (Object[])client.execute("wp.getAuthors", params);
 			for(int i = 0; i< result.length; i++){
 				System.out.println(result[i].toString());
 			}
