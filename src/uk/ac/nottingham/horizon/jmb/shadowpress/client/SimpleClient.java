@@ -41,14 +41,13 @@ public class SimpleClient {
 	    Object[] params;
 	    if(limit > 0){
 	    	params = new Object[]{user,pwrd,new String(type), limit};
-	    }else{
-	    	params = new Object[]{user,pwrd,new String(type), limit};
+	    
+		    try {
+		    	return (Object[])client.execute("shadowpress.select", params);
+			} catch (XmlRpcException e) {
+				e.printStackTrace();
+			}
 	    }
-	    try {
-	    	return (Object[])client.execute("shadowpress.select", params);
-		} catch (XmlRpcException e) {
-			e.printStackTrace();
-		}
 	    return null;
 	}
 
