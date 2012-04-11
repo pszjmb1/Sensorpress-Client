@@ -28,24 +28,28 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class SimpleClient {
 	
-	public void getData(String url){
+	public Object[] selectFromXMLRPC(String url, String user, String pwrd, 
+			String type, Integer limit){
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 	    try {
 			config.setServerURL(new URL(url));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    XmlRpcClient client = new XmlRpcClient();
 	    client.setConfig(config);
-	    Object[] params = new Object[]{new Integer(1),"admin","qwerty"};
+	    Object[] params;
+	    if(limit > 0){
+	    	params = new Object[]{user,pwrd,new String(type), limit};
+	    }else{
+	    	params = new Object[]{user,pwrd,new String(type), limit};
+	    }
 	    try {
-			String result = (String)client.execute("shadowpress.display", params);
-			System.out.println(result);
+	    	return (Object[])client.execute("shadowpress.select", params);
 		} catch (XmlRpcException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	    return null;
 	}
 
 	/**
@@ -53,6 +57,10 @@ public class SimpleClient {
 	 */
 	public static void main(String[] args) {
 		SimpleClient sc = new SimpleClient();
-		sc.getData("http://192.168.56.101/wordpress/xmlrpc.php");
+		Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+				"admin","qwerty","reading",10);
+		for(int i = 0; i < results.length; i++){
+			System.out.println(results[i]);
+		}
 	}
 }
