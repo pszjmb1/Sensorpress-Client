@@ -28,6 +28,15 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class SimpleClient {
 	
+	/**
+	 * Routine to call simple select statements by XML-RPC
+	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
+	 * @param user is the user name 
+	 * @param pwrd is the password
+	 * @param type is the type of table to select from
+	 * @param limit is the numebr of records to return
+	 * @return the resultant rowset
+	 */
 	public Object[] selectFromXMLRPC(String url, String user, String pwrd, 
 			String type, Integer limit){
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
@@ -50,16 +59,54 @@ public class SimpleClient {
 	    }
 	    return null;
 	}
+	/**
+	 * Routine to call simple select statements by XML-RPC
+	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
+	 * @param user is the user name 
+	 * @param pwrd is the password
+	 * @param query is a query to pass to the server to perform
+	 * @return a query result 
+	 */
+	public Object[] doQueryXMLRPC(String url, String user, String pwrd, String query){
+		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+	    try {
+			config.setServerURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	    XmlRpcClient client = new XmlRpcClient();
+	    client.setConfig(config);
+	    Object[] params;
+	    params = new Object[]{user,pwrd,query};
+   
+	    try {
+	    	return (Object[])client.execute("shadowpress.query", params);
+		} catch (XmlRpcException e) {
+			e.printStackTrace();
+		}
+	    
+	    return null;
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		SimpleClient sc = new SimpleClient();
-		Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+		/*Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
 				"admin","qwerty","reading",10);
 		for(int i = 0; i < results.length; i++){
 			System.out.println(results[i]);
+		}*/
+		
+		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
+		Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+				"admin","qwerty",aQuery);
+		if(null != results){
+			for(int i = 0; i < results.length; i++){
+				System.out.println(results[i]);
+			}
 		}
+		
 	}
 }
