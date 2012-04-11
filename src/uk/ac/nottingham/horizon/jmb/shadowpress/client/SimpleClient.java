@@ -93,17 +93,17 @@ public class SimpleClient {
 	 */
 	public static void main(String[] args) {
 		SimpleClient sc = new SimpleClient();
-		/*Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+		Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
 				"admin","qwerty","reading",10);
-		for(int i = 0; i < results.length; i++){
-			System.out.println(results[i]);
-		}*/
 		
-		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
-		Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
-				"admin","qwerty",aQuery);
+		//String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
+		//Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+		//		"admin","qwerty",aQuery);
+		
+				
 		if(null != results){
 			for(int i = 0; i < results.length; i++){
+				System.out.println(results[i].getClass());
 				System.out.println(results[i]);
 			}
 		}
