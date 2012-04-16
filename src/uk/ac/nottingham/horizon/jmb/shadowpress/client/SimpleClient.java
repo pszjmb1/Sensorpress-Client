@@ -59,8 +59,40 @@ public class SimpleClient {
 	    }
 	    return null;
 	}
+	
 	/**
-	 * Routine to call simple select statements by XML-RPC
+	 * Routine to insert readings into a DB via XML-RPC
+	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
+	 * @param user is the user name 
+	 * @param pwrd is the password
+	 * @param type is the data_type to use (such as dec_4_1)
+	 * @param value is reading value
+	 * @param readingset_id is id of the reading set that the reading belongs to
+	 * @param reading_type is the id of the type of reading
+	 * @return an int with the new reading's ID or an error if insert was unseccessful
+	 */
+	public Object[] insert_readingXMLRPC(String url, String user, String pwrd, 
+			String type, String value, Integer readingset_id, Integer reading_type){
+		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+	    try {
+			config.setServerURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	    XmlRpcClient client = new XmlRpcClient();
+	    client.setConfig(config);
+	    Object[] params = new Object[]{user,pwrd,type, 
+	    		value,readingset_id,reading_type};
+    
+	    try {
+	    	return (Object[])client.execute("shadowpress.insert_reading", params);
+		} catch (XmlRpcException e) {
+			e.printStackTrace();
+		}
+	    return null;
+	}
+	/**
+	 * Routine to query a DB via XML-RPC
 	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
 	 * @param user is the user name 
 	 * @param pwrd is the password

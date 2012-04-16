@@ -1,6 +1,5 @@
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.test;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class ClientTests {
 				defaultURL,user,pwrd,"reading",10);
 		Assert.assertEquals(10, results.length);
 		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals(" idhorz_sp_reading=26109",outs[7]);
+		Assert.assertEquals(" idhorz_sp_reading=26149",outs[7]);
 	}
 
 	@Test
@@ -87,6 +86,92 @@ public class ClientTests {
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
+	}
+
+	@Test
+	public void testInsertReading_Dec_4_1() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"dec_4_1","999.9",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26150}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+
+	@Test
+	public void testInsertReading_Dec_5_2() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"dec_5_2","999.99",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26151}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+
+	@Test
+	public void testInsertReading_Dec_8_2() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"dec_8_2","99999.99",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26152}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+
+	@Test
+	public void testInsertReading_Dec_12_6() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"dec_12_6","99999.999999",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26153}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+
+	@Test
+	public void testInsertReading_blob() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"blob","999.9",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26165}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+
+	@Test
+	public void testInsertReading_int() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"int","9999",9999,9999);
+		Assert.assertEquals(1, result.length);
+		String[] outs = result[0].toString().split(",");
+		Assert.assertEquals("{idhorz_sp_reading=26157}",outs[0]);
+		/*for(int i = 0; i < outs.length; i++){
+			System.out.println(outs[i]);
+		}*/
+	}
+	
+	@Test
+	public void failuretestInsertReading_BADVALUE() {
+		SimpleClient sc = new SimpleClient();
+		Object[] result = sc.insert_readingXMLRPC(
+				defaultURL,user,pwrd,"BADVALUE","9999",9999,9999);
+		Assert.assertEquals(null, result);
 	}
 
 }
