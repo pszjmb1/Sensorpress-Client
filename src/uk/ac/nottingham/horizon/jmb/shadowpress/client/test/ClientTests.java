@@ -2,28 +2,39 @@ package uk.ac.nottingham.horizon.jmb.shadowpress.client.test;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.ac.nottingham.horizon.jmb.shadowpress.client.SimpleClient;
 
 public class ClientTests {
-	String defaultURL = "http://192.168.56.101/wordpress/xmlrpc.php";
-	String user = "admin";
-	String pwrd = "qwerty";
+	static String defaultURL = "http://192.168.56.101/wordpress/xmlrpc.php";
+	static String user = "admin";
+	static String pwrd = "qwerty";	
+	static String lastid="-1";
+
+	@BeforeClass
+	public static void testQuerySelect2() {
+		SimpleClient sc = new SimpleClient();
+		String aQuery = "SELECT `idhorz_sp_reading` FROM `shadowpress`.`horz_sp_reading` ORDER BY `idhorz_sp_reading` DESC LIMIT 1";
+
+		Object[] results = sc.doQueryXMLRPC(defaultURL, 
+				user,pwrd,aQuery);						
+
+		Assert.assertEquals(1, results.length);
+		lastid = results[0].toString().split("[=}]")[1];
+		System.out.println(lastid);
+	}
 
 	@Test
 	public void testQuerySelect() {
 		SimpleClient sc = new SimpleClient();
 		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
-		Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
-				"admin","qwerty",aQuery);						
+		Object[] results = sc.doQueryXMLRPC(defaultURL, 
+				user,pwrd,aQuery);						
 
 		Assert.assertEquals(1, results.length);
-		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals(" status=0",outs[1]);
-		/*for(int i = 0; i < outs.length; i++){
-			System.out.println(outs[i]);
-		}*/
+		//System.out.println(results[0].toString(););
 	}
 
 	@Test
@@ -33,7 +44,7 @@ public class ClientTests {
 				defaultURL,user,pwrd,"reading",10);
 		Assert.assertEquals(10, results.length);
 		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals(" idhorz_sp_reading=26149",outs[7]);
+		Assert.assertEquals(lastid,outs[7].split("=")[1]);
 	}
 
 	@Test
@@ -95,10 +106,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"dec_4_1","999.9",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26150}",outs[0]);
-		/*for(int i = 0; i < outs.length; i++){
-			System.out.println(outs[i]);
-		}*/
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 	}
 
 	@Test
@@ -108,7 +119,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"dec_5_2","999.99",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26151}",outs[0]);
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
@@ -121,7 +135,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"dec_8_2","99999.99",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26152}",outs[0]);
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
@@ -134,7 +151,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"dec_12_6","99999.999999",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26153}",outs[0]);
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
@@ -147,7 +167,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"blob","999.9",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26165}",outs[0]);
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
@@ -160,7 +183,10 @@ public class ClientTests {
 				defaultURL,user,pwrd,"int","9999",9999,9999);
 		Assert.assertEquals(1, result.length);
 		String[] outs = result[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_reading=26157}",outs[0]);
+		int exp = Integer.valueOf(lastid)+1;
+		int res = Integer.valueOf(outs[0].split("[=}]")[1]);
+		Assert.assertEquals(exp,res);
+		lastid = ""+res;
 		/*for(int i = 0; i < outs.length; i++){
 			System.out.println(outs[i]);
 		}*/
