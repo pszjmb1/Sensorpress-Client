@@ -38,6 +38,17 @@ public class ClientTests {
 	}
 
 	@Test
+	public void testTables() {
+		SimpleClient sc = new SimpleClient();
+		Object[] results = sc.tablesFromXMLRPC(
+				defaultURL,user,pwrd);
+		Assert.assertEquals(13, results.length);
+		/*for(int i = 0; i < results.length; i++){
+			System.out.println(results[i]);
+		}*/
+	}
+
+	@Test
 	public void testSelectReadings() {
 		SimpleClient sc = new SimpleClient();
 		Object[] results = sc.selectFromXMLRPC(
