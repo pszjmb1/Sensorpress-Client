@@ -49,6 +49,17 @@ public class ClientTests {
 	}
 
 	@Test
+	public void testColumns() {
+		SimpleClient sc = new SimpleClient();
+		Object[] results = sc.columnsFromXMLRPC(
+				defaultURL,user,pwrd,"horz_sp_reading");
+		Assert.assertEquals(9, results.length);
+		for(int i = 0; i < results.length; i++){
+			System.out.println(results[i]);
+		}
+	}
+
+	@Test
 	public void testSelectReadings() {
 		SimpleClient sc = new SimpleClient();
 		Object[] results = sc.selectFromXMLRPC(
