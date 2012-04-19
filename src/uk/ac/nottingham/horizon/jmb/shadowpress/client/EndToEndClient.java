@@ -174,7 +174,7 @@ public class EndToEndClient {
 			//System.out.println(aQuery);
 			results = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
 		} else { // select them all
-			aQuery = aQuery + " LIMIT 10";	// for testing purposes REMOVE for live!!!!
+			//aQuery = aQuery + " LIMIT 10";	// for testing purposes REMOVE for live!!!!
 			results = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
 			/*for(int i = 0; i < results.length; i++){
 				System.out.println(results[i]);
@@ -324,6 +324,7 @@ public class EndToEndClient {
 		insertRecordsIntoReadingsets(url2, user2,
 				pwrd2, recentReadings);		
 		insertRecentReadings(url1, user1,pwrd1, url2, user2, pwrd2);
+		System.out.println("Complete.");
 	}
 
 	/**
