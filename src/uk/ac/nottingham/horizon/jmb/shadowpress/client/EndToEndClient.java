@@ -24,6 +24,7 @@ import java.net.URL;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import java.util.HashMap;
 
 public class EndToEndClient {
 	private String recentReadingsetTimestamp = null;
@@ -234,10 +235,17 @@ public class EndToEndClient {
 					"ORDER BY `idhorz_sp_reading` ASC LIMIT 1";
 		}
 		Object[] res = doQueryXMLRPC(url, user, pwrd, query);
+		
 		if(res.length > 0){
-			return doQueryXMLRPC(url, user, pwrd, query)[0].toString();
+			String lowestid = doQueryXMLRPC(url, user, pwrd, query)[0].toString();
+			if(null != lowestid){
+				lowestid =lowestid.replace("{idhorz_sp_reading=", "");
+				return lowestid.replace("}", "");	
+			}else{
+				return "1";
+			}
 		}else{
-			return null;
+			return "1";
 		}
 		
 	}
@@ -257,31 +265,47 @@ public class EndToEndClient {
 			String pwrd1, String url2, String user2, String pwrd2) {
 		// Select url1.reading.id for earliest selected url1.readingset
 		String lowestid = getLowestReadingIdForReadingSetTimestamp(url1, user1, pwrd1);
-		lowestid =lowestid.replace("{idhorz_sp_reading=", "");
-		lowestid =lowestid.replace("}", "");
-		if(null != lowestid){
-			System.out.println(lowestid);		
-		}else{
-			lowestid = "1";
-		}
-		String aQuery = "SELECT * FROM `horz_sp_reading` WHERE idhorz_sp_reading >=" + lowestid;
+		String aQuery = "SELECT COUNT(*) FROM `horz_sp_reading` WHERE idhorz_sp_reading >=" + lowestid;
 		Object[] records = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
-		if (records != null && records.length > 0) { // only select the more recent readingsets
-			/*aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_reading` " +
-					"(`idhorz_sp_reading`, `value_blob`, `value_dec_4_1`, `value_dec_5_2`, `value_dec_8_2`, " +
-					"`value_dec_12_6`, `value_int`, `horz_sp_readingset_readingset_id`, " +
-					"`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES";
-			String result;
-			for (int i = 0; i < records.length; i++) {
-				result = records[i].toString();
-				String[] fields = result.split("[=,}]");
-
-				aQuery = aQuery + "('" + fields[1] + "'," + fields[3] + ","
-						+ fields[5] + "," + fields[7] + "),";
-			}*/
-
-			for(int i = 0; i < records.length; i++){
-				System.out.println(records[i]);
+		if (records != null && records.length > 0) { 
+			Integer numrecords = Integer.valueOf(records[0].toString().replace(
+					"{COUNT(*)=","").replace("}", ""));
+			Integer offsetIncrease = 500;
+			HashMap<String, String> dictionary;
+			for(int i = 0; i < numrecords; i+= offsetIncrease){
+				aQuery = "SELECT * FROM `horz_sp_reading` " +
+							"WHERE idhorz_sp_reading >=" + lowestid + " LIMIT " + i + "," + offsetIncrease;
+				records = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
+				if (records != null && records.length > 0) {
+					aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_reading` " +
+							"(`idhorz_sp_reading`, `value_blob`, `value_dec_4_1`, `value_dec_5_2`, `value_dec_8_2`, " +
+							"`value_dec_12_6`, `value_int`, `horz_sp_readingset_readingset_id`, " +
+							"`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES";
+					String result;
+					for (int j = 0; j < records.length; j++) {
+						dictionary = new HashMap<String, String>();
+						result = records[j].toString().replace("{", "").replace("}", "");
+						String[] fields = result.split(",");
+						String[] fields2;
+						String val;
+						for (int k = 0; k < fields.length; k++) {
+							fields2 = fields[k].split("=");
+							if(fields2.length > 1){
+								val = fields2[1];
+							}else{
+								val = "null";
+							}
+							dictionary.put(fields2[0].trim(), val);
+						}
+						aQuery = aQuery + "('" + dictionary.get("idhorz_sp_reading") + "'," + 
+								 dictionary.get("value_blob") + "," + dictionary.get("value_dec_4_1") + "," +
+								 dictionary.get("value_dec_5_2") + "," + dictionary.get("value_dec_8_2") + "," +
+								 dictionary.get("value_dec_12_6") + "," + dictionary.get("value_int") + "," +
+								 dictionary.get("horz_sp_readingset_readingset_id") + "," + 
+								 dictionary.get("horz_sp_reading_type_idhorz_sp_reading_type") + "),";
+					}		
+					doQueryXMLRPC(url2, user2, pwrd2, aQuery.substring(0,aQuery.length()-1));			
+				}
 			}
 		} 
 	}
