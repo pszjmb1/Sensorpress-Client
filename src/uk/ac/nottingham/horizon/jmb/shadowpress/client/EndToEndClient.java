@@ -26,7 +26,7 @@ import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class EndToEndClient {
-
+	private String recentReadingsetTimestamp = null;
 	/**
 	 * Routine to call simple select statements by XML-RPC
 	 * 
@@ -165,16 +165,19 @@ public class EndToEndClient {
 
 		// Select url1.readingsets > url2's most recent
 		aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset`";
-		String recent = null;
+		recentReadingsetTimestamp = null;
 		if (results.length > 0) { // only select the more recent readingsets
-			recent = results[0].toString().split("[=}]")[1];
+			recentReadingsetTimestamp = results[0].toString().split("[=}]")[1];
 			// System.out.println(recent);
-			aQuery = aQuery + " WHERE `timestamp` > " + "\"" + recent + "\"";
-			// System.out.println(aQuery);
+			aQuery = aQuery + " WHERE `timestamp` > " + "\"" + recentReadingsetTimestamp + "\"";
+			//System.out.println(aQuery);
 			results = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
 		} else { // select them all
-			//aQuery = aQuery + " LIMIT 10";	// for testing purposes REMOVE for live!!!!
+			aQuery = aQuery + " LIMIT 10";	// for testing purposes REMOVE for live!!!!
 			results = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
+			/*for(int i = 0; i < results.length; i++){
+				System.out.println(results[i]);
+			}*/
 		}
 		return results;
 	}
@@ -186,7 +189,7 @@ public class EndToEndClient {
 	 * @param pwrd2
 	 * @param records
 	 */
-	public void insertRecordsIntoReadingsets(String url2, String user2,
+	public Object[] insertRecordsIntoReadingsets(String url2, String user2,
 			String pwrd2, Object[] records) {
 		String aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_readingset`("
 				+ "timestamp,readingset_id,"
@@ -204,11 +207,83 @@ public class EndToEndClient {
 		aQuery = aQuery.substring(0, aQuery.length() - 1); // trim final ,
 		//System.out.println(aQuery);
 
-		Object[] results = doQueryXMLRPC(url2, user2, pwrd2, aQuery);
-
-		for (int i = 0; i < results.length; i++) {
-			System.out.println(results[i]);
+		return doQueryXMLRPC(url2, user2, pwrd2, aQuery);
+	}
+	
+	/**
+	 *  Select reading.id for earliest selected url1.readingset
+	 * @param url
+	 * @param user
+	 * @param pwrd
+	 * @param timestamp
+	 * @return String for the readingid
+	 */
+	public String getLowestReadingIdForReadingSetTimestamp(String url, String user,
+			String pwrd){
+		String query = null;
+		if(null != recentReadingsetTimestamp){
+			query = "SELECT `horz_sp_reading`.`idhorz_sp_reading` " + 
+						"FROM `horz_sp_reading`, `horz_sp_readingset`" + 
+						"WHERE `horz_sp_reading`.`horz_sp_readingset_readingset_id` =  " +
+						"`horz_sp_readingset`.`readingset_id` AND " +
+						"`horz_sp_readingset`.`timestamp` = " +
+						"\"" + recentReadingsetTimestamp + "\" ORDER BY `horz_sp_reading`.`idhorz_sp_reading` ASC LIMIT 1";
+		}else{
+			query = "SELECT `idhorz_sp_reading` " +
+					"FROM `horz_sp_reading` " +
+					"ORDER BY `idhorz_sp_reading` ASC LIMIT 1";
 		}
+		Object[] res = doQueryXMLRPC(url, user, pwrd, query);
+		if(res.length > 0){
+			return doQueryXMLRPC(url, user, pwrd, query)[0].toString();
+		}else{
+			return null;
+		}
+		
+	}
+
+	/**
+	 * Select readingsets from url1 that are more recent than in url2
+	 * 
+	 * @param url1
+	 * @param user1
+	 * @param pwrd1
+	 * @param url2
+	 * @param user2
+	 * @param pwrd2
+	 * @return the more recent readingsets
+	 */
+	public void insertRecentReadings(String url1, String user1,
+			String pwrd1, String url2, String user2, String pwrd2) {
+		// Select url1.reading.id for earliest selected url1.readingset
+		String lowestid = getLowestReadingIdForReadingSetTimestamp(url1, user1, pwrd1);
+		lowestid =lowestid.replace("{idhorz_sp_reading=", "");
+		lowestid =lowestid.replace("}", "");
+		if(null != lowestid){
+			System.out.println(lowestid);		
+		}else{
+			lowestid = "1";
+		}
+		String aQuery = "SELECT * FROM `horz_sp_reading` WHERE idhorz_sp_reading >=" + lowestid;
+		Object[] records = doQueryXMLRPC(url1, user1, pwrd1, aQuery);
+		if (records != null && records.length > 0) { // only select the more recent readingsets
+			/*aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_reading` " +
+					"(`idhorz_sp_reading`, `value_blob`, `value_dec_4_1`, `value_dec_5_2`, `value_dec_8_2`, " +
+					"`value_dec_12_6`, `value_int`, `horz_sp_readingset_readingset_id`, " +
+					"`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES";
+			String result;
+			for (int i = 0; i < records.length; i++) {
+				result = records[i].toString();
+				String[] fields = result.split("[=,}]");
+
+				aQuery = aQuery + "('" + fields[1] + "'," + fields[3] + ","
+						+ fields[5] + "," + fields[7] + "),";
+			}*/
+
+			for(int i = 0; i < records.length; i++){
+				System.out.println(records[i]);
+			}
+		} 
 	}
 
 	/**
@@ -218,15 +293,13 @@ public class EndToEndClient {
 	public void replicateShadowpress(String url1, String user1, String pwrd1,
 			String url2, String user2, String pwrd2) {
 		System.out.println("calling: intersectRecentReadingsets");
-		Object[] results = intersectRecentReadingsets(url1, user1, pwrd1, url2,
+		Object[] recentReadings = intersectRecentReadingsets(url1, user1, pwrd1, url2,
 				user2, pwrd2);
 
 		System.out.println("calling: insertRecordsIntoReadingsets");
 		insertRecordsIntoReadingsets(url2, user2,
-				pwrd2, results);
-		// Select url1.reading.id for earliest selected url1.readingset
-		// Select url1.reading.ids >= selected url1.reading.id
-		// Insert selected url1.readings into url2.reading
+				pwrd2, recentReadings);		
+		insertRecentReadings(url1, user1,pwrd1, url2, user2, pwrd2);
 	}
 
 	/**
