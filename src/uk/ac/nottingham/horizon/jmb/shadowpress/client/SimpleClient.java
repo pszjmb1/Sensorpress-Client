@@ -60,6 +60,59 @@ public class SimpleClient {
 	    return null;
 	}
 	
+
+	/**
+	 * Routine to show Shadowpress tables from XML-RPC
+	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
+	 * @param user is the user name 
+	 * @param pwrd is the password
+	 * @return the resultant rowset
+	 */
+	public Object[] tablesFromXMLRPC(String url, String user, String pwrd){
+		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+	    try {
+			config.setServerURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	    XmlRpcClient client = new XmlRpcClient();
+	    client.setConfig(config);
+	    Object[] params = new Object[]{user,pwrd};	    
+		    try {
+		    	return (Object[])client.execute("shadowpress.tables", params);
+			} catch (XmlRpcException e) {
+				e.printStackTrace();
+			}
+	    return null;
+	}
+	
+
+	/**
+	 * Routine to show Shadowpress table coloumns from XML-RPC
+	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
+	 * @param user is the user name 
+	 * @param pwrd is the password
+	 * @param tables is the table to display the columns for
+	 * @return the resultant rowset
+	 */
+	public Object[] columnsFromXMLRPC(String url, String user, String pwrd, String table){
+		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+	    try {
+			config.setServerURL(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	    XmlRpcClient client = new XmlRpcClient();
+	    client.setConfig(config);
+	    Object[] params = new Object[]{user,pwrd,table};	    
+		    try {
+		    	return (Object[])client.execute("shadowpress.columns", params);
+			} catch (XmlRpcException e) {
+				e.printStackTrace();
+			}
+	    return null;
+	}
+	
 	/**
 	 * Routine to insert readings into a DB via XML-RPC
 	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
@@ -125,12 +178,12 @@ public class SimpleClient {
 	 */
 	public static void main(String[] args) {
 		SimpleClient sc = new SimpleClient();
-		Object[] results = sc.selectFromXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
-				"admin","qwerty","reading",10);
-		
-		//String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
-		//Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
-		//		"admin","qwerty",aQuery);
+		/*Object[] results = sc.selectFromXMLRPC("http://192.168.56.102/xmlrpc.php",//"http://192.168.56.101/wordpress/xmlrpc.php", 
+				"admin","a","reading",10);//"admin","qwerty","reading",10);
+		*/
+		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
+		Object[] results = sc.doQueryXMLRPC("http://192.168.56.101/wordpress/xmlrpc.php", 
+				"admin","qwerty",aQuery);
 		
 				
 		if(null != results){
