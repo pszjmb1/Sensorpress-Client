@@ -30,24 +30,6 @@ public interface SpSelectionClient {
 	 * @return the resultant rowset with the recent blog posts
 	 */
 	public Object[] selectRecentBlogPosts();
-	
-	/**
-	 * Select readingsets from url1 that are more recent than those in url2 
-	 * @param url1 is a url to select readingsets from
-	 * @param user1 is the user for url1
-	 * @param pwrd1 is the password for url1
-	 * @param url2 is a url to check readingsets against
-	 * @param user1 is the user for url2
-	 * @param pwrd1 is the password for url2
-	 * @return the more recent readingsets
-	 */
-	public Object[] intersectRecentReadingsets(String url1, String user1,
-			String pwrd1, String url2, String user2, String pwrd2);
-	/**
-	 *  Select reading.id for earliest selected url1.readingset
-	 * @return String for the readingid
-	 */
-	public String selectLowestReadingIdForReadingSetTimestamp();
 	/**
 	 * Routine to show Shadowpress tables from XML-RPC
 	 * @return the resultant rowset
@@ -58,6 +40,19 @@ public interface SpSelectionClient {
 	 * @param table is the table to display the columns for
 	 * @return the resultant rowset
 	 */
-	public Object[] columnsFromXMLRPC(String table);
+	public Object[] columnsFromXMLRPC(String table);	
+	/**
+	 * Select readingsets from url1 that are more recent than those in url2 
+	 * @param client1 connects to the ur1 to select readings from
+	 * @param client2 connects to the url to check readingsets against
+	 * @return the more recent readingsets
+	 */
+	public Object[] intersectRecentReadingsets(SpXMLRpcClient client1, 
+			SpXMLRpcClient client2);
+	/**
+	 *  Select reading.id for earliest selected url1.readingset
+	 * @return String for the readingid
+	 */
+	public String selectLowestReadingIdForReadingSetTimestamp();
 
 }

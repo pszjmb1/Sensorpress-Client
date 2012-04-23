@@ -1,7 +1,25 @@
+/* Implementation class for selection client operations on Shadowpress.
+ Copyright (C) 2012  Jesse Blum (JMB)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 
 public class SpSelectionClientImpl implements SpSelectionClient {
 	SpXMLRpcClient myClient;
+	private String recentReadingsetTimestamp = null;
 	
 	public SpSelectionClientImpl(SpXMLRpcClient aClient){
 		myClient = aClient;
@@ -17,27 +35,21 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 
 	@Override
 	public Object[] select(String type, Integer limit) {
-		// TODO Auto-generated method stub
-		return null;
+		return myClient.execute("shadowpress.select", 
+				new Object[]{myClient.getUser(),myClient.getPwrd(), 
+					type, limit});
 	}
-
+	
+	/**
+	 * Select the last ten blog posts
+	 * @return the blog posts
+	 */
 	@Override
 	public Object[] selectRecentBlogPosts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] intersectRecentReadingsets(String url1, String user1,
-			String pwrd1, String url2, String user2, String pwrd2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String selectLowestReadingIdForReadingSetTimestamp() {
-		// TODO Auto-generated method stub
-		return null;
+		// new Integer(1),user,password,new Integer(10)
+		return myClient.execute("metaWeblog.getRecentPosts", 
+				new Object[]{new Integer(1), myClient.getUser(),
+					myClient.getPwrd(), new Integer(10)});
 	}
 
 	
@@ -64,6 +76,75 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 	public Object[] columnsFromXMLRPC(String table) {
 		return myClient.execute("shadowpress.columns", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(),table});
+	}
+	
+	/**
+	 * Select readingsets from url1 that are more recent than those in url2 
+	 * @param client1 connects to the ur1 to select readings from
+	 * @param client2 connects to the url to check readingsets against
+	 * @return the more recent readingsets
+	 */
+	@Override
+	public Object[] intersectRecentReadingsets(
+			SpXMLRpcClient client1, SpXMLRpcClient client2) {
+		String aQuery = "SELECT `timestamp` FROM `shadowpress`." +
+				"`horz_sp_readingset` " +
+				"ORDER BY `timestamp` DESC LIMIT 1";
+		Object[] results = client2.doQueryXMLRPC(aQuery);
+
+		// Select url1.readingsets > url2's most recent
+		aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset`";
+		recentReadingsetTimestamp = null;
+		if (results.length > 0) { // only select the more recent readingsets
+			recentReadingsetTimestamp = results[0].toString().split("[=}]")[1];
+			// System.out.println(recent);
+			aQuery = aQuery + " WHERE `timestamp` > " + "\"" + 
+			recentReadingsetTimestamp + "\"";
+			//System.out.println(aQuery);
+			results = client1.doQueryXMLRPC(aQuery);
+		} else { // select them all
+			//aQuery = aQuery + " LIMIT 10";	// for testing purposes REMOVE for live!!!!
+			results = client1.doQueryXMLRPC(aQuery);
+			/*for(int i = 0; i < results.length; i++){
+				System.out.println(results[i]);
+			}*/
+		}
+		return results;
+	}
+
+	/**
+	 *  Select reading.id for earliest selected url1.readingset
+	 * @return String for the readingid
+	 */
+	@Override
+	public String selectLowestReadingIdForReadingSetTimestamp() {
+		String query = null;
+		if(null != recentReadingsetTimestamp){
+			query = "SELECT `horz_sp_reading`.`idhorz_sp_reading` " + 
+						"FROM `horz_sp_reading`, `horz_sp_readingset`" + 
+						"WHERE `horz_sp_reading`.`horz_sp_readingset_readingset_id` =  " +
+						"`horz_sp_readingset`.`readingset_id` AND " +
+						"`horz_sp_readingset`.`timestamp` = " +
+						"\"" + recentReadingsetTimestamp + 
+						"\" ORDER BY `horz_sp_reading`.`idhorz_sp_reading` ASC LIMIT 1";
+		}else{
+			query = "SELECT `idhorz_sp_reading` " +
+					"FROM `horz_sp_reading` " +
+					"ORDER BY `idhorz_sp_reading` ASC LIMIT 1";
+		}
+		Object[] res = myClient.doQueryXMLRPC(query);
+		
+		if(res.length > 0){
+			String lowestid = myClient.doQueryXMLRPC(query)[0].toString();
+			if(null != lowestid){
+				lowestid =lowestid.replace("{idhorz_sp_reading=", "");
+				return lowestid.replace("}", "");	
+			}else{
+				return "1";
+			}
+		}else{
+			return "1";
+		}
 	}
 
 }
