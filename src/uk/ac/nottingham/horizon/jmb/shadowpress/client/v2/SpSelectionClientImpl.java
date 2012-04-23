@@ -17,11 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class SpSelectionClientImpl implements SpSelectionClient {
 	SpXMLRpcClient myClient;
 	private String recentReadingsetTimestamp = null;
+	private final static Logger LOGGER = Logger.getLogger(SpXMLRpcClient.class.getName());
 	
-	public SpSelectionClientImpl(SpXMLRpcClient aClient){
+	public SpSelectionClientImpl(SpXMLRpcClient aClient,Level level){
+		LOGGER.setLevel(level);
 		myClient = aClient;
 	}	
 

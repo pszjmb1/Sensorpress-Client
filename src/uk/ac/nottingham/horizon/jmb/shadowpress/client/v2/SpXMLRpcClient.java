@@ -36,8 +36,8 @@ public class SpXMLRpcClient implements SpBaseClient {
 	String user;
 	String pwrd;
 	
-	public SpXMLRpcClient(String username, String password){
-		LOGGER.setLevel(Level.INFO);
+	public SpXMLRpcClient(String username, String password, Level level){
+		LOGGER.setLevel(level);
 		user = username;
 		pwrd = password;
 	}	

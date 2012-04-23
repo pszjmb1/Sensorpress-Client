@@ -1,12 +1,16 @@
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SpInsertionClientImpl implements SpInsertionClient {
 	SpXMLRpcClient myClient;
+	private final static Logger LOGGER = Logger.getLogger(SpXMLRpcClient.class.getName());
 	
-	public SpInsertionClientImpl(SpXMLRpcClient aClient){
+	public SpInsertionClientImpl(SpXMLRpcClient aClient, Level aLevel){
 		myClient = aClient;
+		LOGGER.setLevel(aLevel);
 	}	
 
 	/**
@@ -60,7 +64,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 	@Override
 	public Object[] insertRecentReadings(SpXMLRpcClient client1, SpXMLRpcClient client2) {
 		// Select url1.reading.id for earliest selected url1.readingset
-		SpSelectionClient select = new SpSelectionClientImpl(client1);
+		SpSelectionClient select = new SpSelectionClientImpl(client1, LOGGER.getLevel());
 		String lowestid = select.selectLowestReadingIdForReadingSetTimestamp();
 		String aQuery = 
 				"SELECT COUNT(*) FROM `horz_sp_reading` WHERE idhorz_sp_reading >=" + lowestid;
