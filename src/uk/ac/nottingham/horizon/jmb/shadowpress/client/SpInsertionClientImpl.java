@@ -1,17 +1,25 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SpInsertionClientImpl implements SpInsertionClient {
-	SpXMLRpcClient myClient;
+	SpBaseClient myClient;
 	private final static Logger LOGGER = Logger.getLogger(SpXMLRpcClient.class.getName());
 	
-	public SpInsertionClientImpl(SpXMLRpcClient aClient, Level aLevel){
+	public SpInsertionClientImpl(SpBaseClient aClient, Level aLevel){
 		myClient = aClient;
 		LOGGER.setLevel(aLevel);
 	}	
+
+	public SpBaseClient geClient() {
+		return myClient;
+	}
+
+	public void setMyClient(SpBaseClient Client) {
+		this.myClient = Client;
+	}
 
 	/**
 	 * Routine to insert readings into a DB via XML-RPC
@@ -62,7 +70,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 	 * @return the insertion result or null if not completed.
 	 */
 	@Override
-	public Object[] insertRecentReadings(SpXMLRpcClient client1, SpXMLRpcClient client2) {
+	public Object[] insertRecentReadings(SpBaseClient client1, SpBaseClient client2) {
 		// Select url1.reading.id for earliest selected url1.readingset
 		SpSelectionClient select = new SpSelectionClientImpl(client1, LOGGER.getLevel());
 		String lowestid = select.selectLowestReadingIdForReadingSetTimestamp();
@@ -106,7 +114,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 								 dictionary.get("horz_sp_readingset_readingset_id") + "," + 
 								 dictionary.get("horz_sp_reading_type_idhorz_sp_reading_type") + "),";
 					}		
-					return client2.doQueryXMLRPC(aQuery.substring(0,aQuery.length()-1));			
+					client2.doQueryXMLRPC(aQuery.substring(0,aQuery.length()-1));			
 				}
 			}
 		}

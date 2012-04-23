@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 public interface SpSelectionClient {
 	/**
@@ -47,8 +47,8 @@ public interface SpSelectionClient {
 	 * @param client2 connects to the url to check readingsets against
 	 * @return the more recent readingsets
 	 */
-	public Object[] intersectRecentReadingsets(SpXMLRpcClient client1, 
-			SpXMLRpcClient client2);
+	public Object[] intersectRecentReadingsets(SpBaseClient client1, 
+			SpBaseClient client2);
 	/**
 	 *  Select reading.id for earliest selected url1.readingset
 	 * @return String for the readingid

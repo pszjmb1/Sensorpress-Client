@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +16,7 @@ public class SpReplicationClientImpl implements SpReplicationClient {
 	 * @param client2 receives new data
 	 */
 	@Override
-	public void replicate(SpXMLRpcClient client1, SpXMLRpcClient client2) {
+	public void replicate(SpBaseClient client1, SpBaseClient client2) {
 		LOGGER.info("calling: intersectRecentReadingsets");
 		System.out.println("calling: intersectRecentReadingsets");
 		SpSelectionClient select = new SpSelectionClientImpl(client1, LOGGER.getLevel());

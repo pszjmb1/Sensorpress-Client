@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -28,7 +28,7 @@ public interface SpBaseClient {
 	 * @param store toggles whether or not to store this connection
 	 * @return a configured XmlRpcClient client.
 	 */
-	public XmlRpcClient getSimpleClient(String url, boolean reset, boolean store);	
+	public XmlRpcClient simpleClient(String url, boolean reset, boolean store);	
 	/**
 	 * Retrieves a configured XmlRpcClient client using more complex mechanisms such as proxy servers.   
 	 * @param url is the URL to the XML-RPC interface (such as http://192.168.56.101/wordpress/xmlrpc.php)
@@ -42,6 +42,26 @@ public interface SpBaseClient {
 	 * @param password
 	 */
 	public void setUserDetails(String username, String password);
+	/**
+	 * Returns the username associated with this client
+	 * @return a String for the user name
+	 */
+	public String getUser();
+	/**
+	 * Sets the username associated with this client
+	 * @param user is the username
+	 */
+	public void setUser(String user);
+	/**
+	 * Returns the password associated with this client
+	 * @return a String for the password
+	 */
+	public String getPwrd();
+	/**
+	 * Sets the password associated with this client
+	 * @param pwrd is the password
+	 */
+	public void setPwrd(String pwrd);
 	/**
 	 * Executes a client operation.
 	 * @param aClient is the client to perform the operation

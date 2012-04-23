@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 public interface SpInsertionClient{
 	/**
@@ -40,6 +40,6 @@ public interface SpInsertionClient{
 	 * @param client2 is used to check readingsets against
 	 * @return the insertion result
 	 */
-	public Object[] insertRecentReadings(SpXMLRpcClient client1, SpXMLRpcClient client2);
+	public Object[] insertRecentReadings(SpBaseClient client1, SpBaseClient client2);
 
 }

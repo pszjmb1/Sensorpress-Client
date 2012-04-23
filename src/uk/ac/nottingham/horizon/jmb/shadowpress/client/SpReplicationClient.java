@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 public interface SpReplicationClient {
 	
@@ -7,5 +7,5 @@ public interface SpReplicationClient {
 	 * @param client1 contains the data to replicate
 	 * @param client2 receives new data
 	 */
-	public void replicate(SpXMLRpcClient client1, SpXMLRpcClient client2);
+	public void replicate(SpBaseClient client1, SpBaseClient client2);
 }

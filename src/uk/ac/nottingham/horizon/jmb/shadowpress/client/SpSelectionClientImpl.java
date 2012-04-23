@@ -15,26 +15,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SpSelectionClientImpl implements SpSelectionClient {
-	SpXMLRpcClient myClient;
+	SpBaseClient myClient;
 	private String recentReadingsetTimestamp = null;
 	private final static Logger LOGGER = Logger.getLogger(SpXMLRpcClient.class.getName());
 	
-	public SpSelectionClientImpl(SpXMLRpcClient aClient,Level level){
+	public SpSelectionClientImpl(SpBaseClient aClient,Level level){
 		LOGGER.setLevel(level);
 		myClient = aClient;
 	}	
 
-	public SpXMLRpcClient geClient() {
+	public SpBaseClient geClient() {
 		return myClient;
 	}
 
-	public void setMyClient(SpXMLRpcClient Client) {
+	public void setMyClient(SpBaseClient Client) {
 		this.myClient = Client;
 	}
 
@@ -91,7 +91,7 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 	 */
 	@Override
 	public Object[] intersectRecentReadingsets(
-			SpXMLRpcClient client1, SpXMLRpcClient client2) {
+			SpBaseClient client1, SpBaseClient client2) {
 		String aQuery = "SELECT `timestamp` FROM `shadowpress`." +
 				"`horz_sp_readingset` " +
 				"ORDER BY `timestamp` DESC LIMIT 1";

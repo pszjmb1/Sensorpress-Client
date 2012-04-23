@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
+package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -68,7 +68,7 @@ public class SpXMLRpcClient implements SpBaseClient {
 	 * @return a configured XmlRpcClient client or null if an error occured.
 	 */
 	@Override
-	public XmlRpcClient getSimpleClient(String url, boolean reset, boolean store) {
+	public XmlRpcClient simpleClient(String url, boolean reset, boolean store) {
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		XmlRpcClient aClient = null;
 		if(!reset && null != client){
