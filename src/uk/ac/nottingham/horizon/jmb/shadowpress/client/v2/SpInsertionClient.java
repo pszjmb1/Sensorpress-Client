@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 
-public interface SpInsertionClient extends SpBaseClient {
+public interface SpInsertionClient{
 	/**
 	 * Routine to insert readings into a DB via XML-RPC
 	 * @param type is the data_type to use (such as dec_4_1)
@@ -30,20 +30,16 @@ public interface SpInsertionClient extends SpBaseClient {
 			Integer readingset_id, Integer reading_type);
 	/**
 	 * Inserts multiple records into SP readingset 
-	 * @param records
+	 * @param records are the values to insert
 	 * @return the insertion result
 	 */
 	public Object[] insertRecordsIntoReadingsets(Object[] records);
 	/**
 	 * insert readingsets from url1 that are more recent than in url2
-	 * @param url1 is a url to select readingsets from
-	 * @param user1 is the user for url1
-	 * @param pwrd1 is the password for url1
-	 * @param url2 is a url to check readingsets against
-	 * @param user1 is the user for url2
-	 * @param pwrd1 is the password for url2
+	 * @param client1 is used to select readingsets from
+	 * @param client2 is used to check readingsets against
+	 * @return the insertion result
 	 */
-	public void insertRecentReadings(String url1, String user1,
-			String pwrd1, String url2, String user2, String pwrd2);
+	public Object[] insertRecentReadings(SpXMLRpcClient client1, SpXMLRpcClient client2);
 
 }
