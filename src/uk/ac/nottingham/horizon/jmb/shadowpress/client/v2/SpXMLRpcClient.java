@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
@@ -31,11 +32,33 @@ import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
 public class SpXMLRpcClient implements SpBaseClient {
 	private final static Logger LOGGER = Logger.getLogger(SpXMLRpcClient.class.getName());
 	
-	XmlRpcClient client = null;	
+	XmlRpcClient client;	
+	String user;
+	String pwrd;
 	
-	public SpXMLRpcClient(){
+	public SpXMLRpcClient(String username, String password){
 		LOGGER.setLevel(Level.INFO);
+		user = username;
+		pwrd = password;
+	}	
+
+	public String getUser() {
+		return user;
 	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPwrd() {
+		return pwrd;
+	}
+
+	public void setPwrd(String pwrd) {
+		this.pwrd = pwrd;
+	}
+
+
 
 	/**
 	 * Retrieves a configured XmlRpcClient client.   
@@ -110,23 +133,64 @@ public class SpXMLRpcClient implements SpBaseClient {
 		}
 		return aClient;
 	}
-
+	/**
+	 * Stores user details for accessing a Shadowpress instance
+	 * @param username
+	 * @param password
+	 */
+	public void setUserDetails(String username, String password){
+		username = user;
+		pwrd = password;
+	}
+	
+	/**
+	 * Executes a client operation.
+	 * @param aClient is the client to perform the operation
+	 * @param operation is the operation to execute
+	 * @param params are the parameters to the operation
+	 * @return an obj array with the results
+	 */
+	public Object[] execute(XmlRpcClient aClient, String operation, Object[] params){
+		if(null == aClient){
+			LOGGER.info("Client is null.");
+			return null;
+		}else{
+			try {
+				return (Object[])aClient.execute(operation, params);
+			} catch (XmlRpcException e) {
+				LOGGER.severe(e.getMessage());
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Executes a client operation. This version uses the stored client
+	 * @param operation is the operation to execute
+	 * @param params are the parameters to the operation
+	 * @return an obj array with the results
+	 */
+	public Object[] execute(String operation, Object[] params){
+		if(null == client){
+			LOGGER.info("Client is null.");
+			return null;
+		}else{
+			try {
+				return (Object[])client.execute(operation, params);
+			} catch (XmlRpcException e) {
+				LOGGER.severe(e.getMessage());
+			}
+		}
+		return null;
+	}
+	/**
+	 * Routine to query a DB via XML-RPC
+	 * @param query is a query to pass to the server to perform
+	 * @return a query result 
+	 */
 	@Override
 	public Object[] doQueryXMLRPC(String query) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] tablesFromXMLRPC() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] columnsFromXMLRPC(String table) {
-		// TODO Auto-generated method stub
-		return null;
+	    return execute("shadowpress.query", new Object[]{user,pwrd,query});
 	}
 
 }

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 
 public interface SpBaseClient {
@@ -36,24 +37,33 @@ public interface SpBaseClient {
 	 */
 	public XmlRpcClient getComplexClient(String url,boolean reset, boolean store,HttpClient httpClient);	
 	/**
+	 * Stores user details for accessing a Shadowpress instance
+	 * @param username
+	 * @param password
+	 */
+	public void setUserDetails(String username, String password);
+	/**
+	 * Executes a client operation.
+	 * @param aClient is the client to perform the operation
+	 * @param operation is the operation to execute
+	 * @param params are the parameters to the operation
+	 * @return an obj array with the results
+	 */
+	public Object[] execute(XmlRpcClient aClient, String operation, Object[] params);
+	
+	/**
+	 * Executes a client operation. This version uses the stored client
+	 * @param operation is the operation to execute
+	 * @param params are the parameters to the operation
+	 * @return an obj array with the results
+	 */
+	public Object[] execute(String operation, Object[] params);
+	/**
 	 * Routine to query a DB via XML-RPC
 	 * @param query is a query to pass to the server to perform
 	 * @return a query result 
 	 */
-	public Object[] doQueryXMLRPC(String query);
-	/**
-	 * Routine to show Shadowpress tables from XML-RPC
-	 * @return the resultant rowset
-	 */
-	public Object[] tablesFromXMLRPC();
-	/**
-	 * Routine to show Shadowpress table columns from XML-RPC
-	 * @param table is the table to display the columns for
-	 * @return the resultant rowset
-	 */
-	public Object[] columnsFromXMLRPC(String table);	
-	
-
+	public Object[] doQueryXMLRPC(String query);	
 	
 }
 	

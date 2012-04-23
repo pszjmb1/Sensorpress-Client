@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.v2;
 
-public interface SpSelectionClient extends SpBaseClient {
+public interface SpSelectionClient {
 	/**
 	 * Routine to call select statements by XML-RPC
 	 * @param type is the type of table to select from
@@ -30,6 +30,7 @@ public interface SpSelectionClient extends SpBaseClient {
 	 * @return the resultant rowset with the recent blog posts
 	 */
 	public Object[] selectRecentBlogPosts();
+	
 	/**
 	 * Select readingsets from url1 that are more recent than those in url2 
 	 * @param url1 is a url to select readingsets from
@@ -47,5 +48,16 @@ public interface SpSelectionClient extends SpBaseClient {
 	 * @return String for the readingid
 	 */
 	public String selectLowestReadingIdForReadingSetTimestamp();
+	/**
+	 * Routine to show Shadowpress tables from XML-RPC
+	 * @return the resultant rowset
+	 */
+	public Object[] tablesFromXMLRPC();
+	/**
+	 * Routine to show Shadowpress table columns from XML-RPC
+	 * @param table is the table to display the columns for
+	 * @return the resultant rowset
+	 */
+	public Object[] columnsFromXMLRPC(String table);
 
 }
