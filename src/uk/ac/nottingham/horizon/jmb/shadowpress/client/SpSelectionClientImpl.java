@@ -30,7 +30,7 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		myClient = aClient;
 	}	
 
-	public SpBaseClient geClient() {
+	public SpBaseClient getClient() {
 		return myClient;
 	}
 

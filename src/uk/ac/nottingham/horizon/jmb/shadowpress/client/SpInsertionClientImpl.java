@@ -13,7 +13,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 		LOGGER.setLevel(aLevel);
 	}	
 
-	public SpBaseClient geClient() {
+	public SpBaseClient getClient() {
 		return myClient;
 	}
 
