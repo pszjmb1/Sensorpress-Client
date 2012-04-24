@@ -1,4 +1,4 @@
-/* Interface defining replication client operations for Shadowpress.
+/* Interface defining csv import client operations for Shadowpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 
-public interface SpReplicationClient {
-	
+
+public interface SpCsvImportClient {
+
 	/**
-	 * Replicates one shadowpress instance (client1) into another one (client2)
-	 * @param client1 contains the data to replicate
-	 * @param client2 receives new data
+	 * Import a file with readings into SP 
+	 * @param directory is the full directory path containing the file to import
+	 * @param filename is the name of the file to import
+	 * @param deviceId is the id of the device whose values are imported for
+	 * @return the query result
 	 */
-	public void replicate(SpBaseClient client1, SpBaseClient client2);
+	public Object[] importCsv(String directory, 
+			String filename, Integer deviceId);
+	
 }
