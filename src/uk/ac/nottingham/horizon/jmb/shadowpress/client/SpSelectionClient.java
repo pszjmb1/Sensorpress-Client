@@ -54,5 +54,12 @@ public interface SpSelectionClient {
 	 * @return String for the readingid
 	 */
 	public String selectLowestReadingIdForReadingSetTimestamp();
+	/**
+	 * Select horz_sp_import.lastrecord
+	 * @param devInst is the device to select for
+	 * @param filename is the filename to select for
+	 * @return the query result
+	 */
+	public Object[] selectImportLastRecord(Integer devInst, String filename);
 
 }

@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,61 +87,69 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 * @param filename
 	 * @return horz_sp_import.lastrecord or null if file has not been imported
 	 */
-	public String getlastrecord(String filename) {
-		// TODO COMPLETE THIS!
-		return null;
+	public String getlastrecord(Integer device, String filename) {
+		Object[] result = new SpSelectionClientImpl(myClient, LOGGER.getLevel())
+				.selectImportLastRecord(device, filename);
+		if (result.length == 1) {
+			return result[0].toString().replace("{lastrecord=", "")
+					.replace("}", "");
+		} else {
+			return null;
+		}
 	}
 
 	/**
-	 * Compares two timestamps and returns -1, 0 or 1 depending on whether the 
-	 * first one is lessthan, equalto, or greater than the second.
-	 * @param timestamp1
-	 * @param timestamp2
-	 * @return- 1, 0 or 1 depending on whether the 
-	 * first one is lessthan, equalto, or greater than the second.
+	 * Checks a list of Pywws strings to see which line index is greater than the given timestamp 
+	 * @param lines is a list of pywws csv content
+	 * @param timestamp is in the format "hh:mm:ss"
+	 * @return the index to begin copying from
 	 */
-	public Integer timestampComparison(String timestamp1,String timestamp2) {
-		// TODO COMPLETE THIS!
-		return -1;
-	}
-
-	public Integer getnextReadingSetId() {
-		// TODO COMPLETE THIS!
+	public Integer getStartingLine(List<String> lines, String timestamp) {
+		Iterator<String> it = lines.iterator();
+		String line;
+		int i = 0;
+		while(it.hasNext()){
+			line = it.next();
+			String[] parts = line.split(" |,");
+			if(0 > timestamp.compareTo(parts[1])){
+				return i; 
+			}
+			i++;
+		}
 		return null;
 	}
 
-	public Integer getStartingLine(List<String> lines, String timestamp){
-		// TODO COMPLETE THIS!
-		return null;
-	}
-	
-	public String insertValues(String line, String readingSetInsert, String insertstringInt, String insertstringDec){
-		Integer hum_in = 1, temp_in = 2, hum_out = 3, temp_out = 4, 
-				abs_pressure = 5, wind_ave = 6, wind_gust = 7, 
-				wind_dir = 8, rain = 9;
-		
+	public String insertValues(String line, String readingSetInsert,
+			String insertstringInt, String insertstringDec) {
+		Integer hum_in = 1, temp_in = 2, hum_out = 3, temp_out = 4, abs_pressure = 5, wind_ave = 6, wind_gust = 7, wind_dir = 8, rain = 9;
+
 		String timestamp = null;
 		/*
-		 * timestamp = row.pop(0)
-readingSetInsert = readingSetInsert + "(" + str(readingSetId) + ", '" + row.pop(0) + "'," + str(horz_sp_deviceinstance_idhorz_sp_deviceinstance) + "," + str(horz_sp_readingset_info_horz_sp_readingset_info_id) + "),"
-                    #Add readings
-                    # The following magic numbers are the db ids for the corresponding idhorz_sp_reading_type 
-                    insertstringInt = insertstringInt + row[hum_in] + ", " + str(readingSetId) + ",2),("
-                    insertstringInt = insertstringInt + row[hum_out] + ", " + str(readingSetId) + ",4),("
-                    insertstringInt = insertstringInt + row[wind_dir] + ", " + str(readingSetId) + ",7),("
-                    insertstringDec = insertstringDec + row[temp_in] + ", " + str(readingSetId) + ",3),("
-                    insertstringDec = insertstringDec + row[temp_out] + ", " + str(readingSetId) + ",1),("
-                    insertstringDec = insertstringDec + row[abs_pressure] + ", " + str(readingSetId) + ",5),("
-                    insertstringDec = insertstringDec + row[wind_ave] + ", " + str(readingSetId) + ",6),("
-                    insertstringDec = insertstringDec + row[wind_gust] + ", " + str(readingSetId) + ",8),("
-                    insertstringDec = insertstringDec + row[rain] + ", " + str(readingSetId) + ",9),("
-                    readingSetId = readingSetId + 1
+		 * timestamp = row.pop(0) readingSetInsert = readingSetInsert + "(" +
+		 * str(readingSetId) + ", '" + row.pop(0) + "'," +
+		 * str(horz_sp_deviceinstance_idhorz_sp_deviceinstance) + "," +
+		 * str(horz_sp_readingset_info_horz_sp_readingset_info_id) + ")," #Add
+		 * readings # The following magic numbers are the db ids for the
+		 * corresponding idhorz_sp_reading_type insertstringInt =
+		 * insertstringInt + row[hum_in] + ", " + str(readingSetId) + ",2),("
+		 * insertstringInt = insertstringInt + row[hum_out] + ", " +
+		 * str(readingSetId) + ",4),(" insertstringInt = insertstringInt +
+		 * row[wind_dir] + ", " + str(readingSetId) + ",7),(" insertstringDec =
+		 * insertstringDec + row[temp_in] + ", " + str(readingSetId) + ",3),("
+		 * insertstringDec = insertstringDec + row[temp_out] + ", " +
+		 * str(readingSetId) + ",1),(" insertstringDec = insertstringDec +
+		 * row[abs_pressure] + ", " + str(readingSetId) + ",5),("
+		 * insertstringDec = insertstringDec + row[wind_ave] + ", " +
+		 * str(readingSetId) + ",6),(" insertstringDec = insertstringDec +
+		 * row[wind_gust] + ", " + str(readingSetId) + ",8),(" insertstringDec =
+		 * insertstringDec + row[rain] + ", " + str(readingSetId) + ",9),("
+		 * readingSetId = readingSetId + 1
 		 */
 		return timestamp;
 	}
-	
-	public Object[] insertImportRecord(
-			String filename, Integer deviceId, String timestamp){
+
+	public Object[] insertImportRecord(String filename, Integer deviceId,
+			String timestamp) {
 		// todo complete!
 		return null;
 	}
@@ -155,52 +164,49 @@ readingSetInsert = readingSetInsert + "(" + str(readingSetId) + ", '" + row.pop(
 	 *            is the name of the file to import
 	 * @param deviceId
 	 *            is the id of the device whose values are imported for
+	 * @param horz_sp_readingset_info_id
+	 *            is the readingset_info_id to insert for the records
 	 * @return the query result
 	 */
 	@Override
 	public Object[] importCsv(String directory, String filename,
-			Integer deviceId) {
+			Integer deviceId, Integer horz_sp_readingset_info_id) {
 		// Ensure that file hasn't been imported already
-		String lastrecord = getlastrecord(filename);
+		String lastrecord = getlastrecord(deviceId, filename);
 		if (!(null == lastrecord)) {
 			// If file has been completely imported ignore it
-			if (0 >= timestampComparison(lastrecord,timeThreshold)) {
+			if (0 >= lastrecord.compareTo(timeThreshold)) {
 				return null;
 			}
 		}
-		
-		Integer readingSetId = getnextReadingSetId();
-		Integer horz_sp_deviceinstance_idhorz_sp_deviceinstance = 1, 
-				horz_sp_readingset_info_horz_sp_readingset_info_id = 1;
-		String readingSetInsert =
-				"INSERT IGNORE INTO horz_sp_readingset " +
-				"(`readingset_id`, `timestamp`, " +
-				"`horz_sp_deviceinstance_idhorz_sp_deviceinstance`, " +
-				"`horz_sp_readingset_info_horz_sp_readingset_info_id`)" +
-				" VALUES ";
-		String insertstringDec = 
-				"INSERT IGNORE INTO `horz_sp_reading`" +
-				"(`value_dec_8_2`,`horz_sp_readingset_readingset_id`, " +
-				"`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
-		String insertstringInt = 
-				"INSERT IGNORE INTO `horz_sp_reading`" +
-				"(`value_int`, `horz_sp_readingset_readingset_id`," +
-				" `horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
+		String readingSetInsert = "INSERT IGNORE INTO horz_sp_readingset "
+				+ "(`readingset_id`, `timestamp`, "
+				+ "`horz_sp_deviceinstance_idhorz_sp_deviceinstance`, "
+				+ "`horz_sp_readingset_info_horz_sp_readingset_info_id`)"
+				+ " VALUES ";
+		String insertstringDec = "INSERT IGNORE INTO `horz_sp_reading`"
+				+ "(`value_dec_8_2`,`horz_sp_readingset_readingset_id`, "
+				+ "`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
+		String insertstringInt = "INSERT IGNORE INTO `horz_sp_reading`"
+				+ "(`value_int`, `horz_sp_readingset_readingset_id`,"
+				+ " `horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
 		List<String> lines = readFile(directory + File.separator + filename);
 		Integer startingLine = 0;
-		if (!(null == lastrecord)){
-			startingLine = getStartingLine(lines,lastrecord);
+		if (!(null == lastrecord)) {
+			startingLine = getStartingLine(lines, lastrecord);
 		}
 		String timestamp = null;
-		for(int i = startingLine; i < lines.size(); i++){
-			timestamp = insertValues(lines.get(i), readingSetInsert, 
+		for (int i = startingLine; i < lines.size(); i++) {
+			timestamp = insertValues(lines.get(i), readingSetInsert,
 					insertstringInt, insertstringDec);
 		}
-		readingSetInsert.substring(0, readingSetInsert.length()-1);
-        insertstringInt = insertstringInt.substring(0, insertstringInt.length()-2);
-        insertstringDec = insertstringDec.substring(0, insertstringDec.length()-2);
-        insertImportRecord(filename,deviceId, timestamp);
-		
+		readingSetInsert.substring(0, readingSetInsert.length() - 1);
+		insertstringInt = insertstringInt.substring(0,
+				insertstringInt.length() - 2);
+		insertstringDec = insertstringDec.substring(0,
+				insertstringDec.length() - 2);
+		insertImportRecord(filename, deviceId, timestamp);
+
 		return null;
 	}
 

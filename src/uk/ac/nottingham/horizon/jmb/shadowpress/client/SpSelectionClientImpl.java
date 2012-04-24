@@ -151,5 +151,13 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 			return "1";
 		}
 	}
-
+	
+	public Object[] selectImportLastRecord(Integer devInst, String filename){
+		String aQuery = "SELECT `lastrecord` FROM `shadowpress`." +
+				"`horz_sp_import` WHERE filename = \"" + filename +
+				"\" AND `horz_sp_deviceinstance_idhorz_sp_deviceinstance` = " + 
+				devInst + " ORDER BY `lastrecord` DESC LIMIT 1";
+		//System.out.println(aQuery);
+		return myClient.doQueryXMLRPC(aQuery);
+	}
 }

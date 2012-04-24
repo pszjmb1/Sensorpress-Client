@@ -25,9 +25,11 @@ public interface SpCsvImportClient {
 	 * @param directory is the full directory path containing the file to import
 	 * @param filename is the name of the file to import
 	 * @param deviceId is the id of the device whose values are imported for
+	 * @param horz_sp_readingset_info_id is the readingset_info_id to insert for the records
 	 * @return the query result
 	 */
 	public Object[] importCsv(String directory, 
-			String filename, Integer deviceId);
+			String filename, Integer deviceId, 
+			Integer horz_sp_readingset_info_id);
 	
 }
