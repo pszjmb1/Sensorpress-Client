@@ -1,7 +1,5 @@
 package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
 
-import static org.junit.Assert.*;
-
 import java.util.logging.Level;
 
 import org.junit.Test;

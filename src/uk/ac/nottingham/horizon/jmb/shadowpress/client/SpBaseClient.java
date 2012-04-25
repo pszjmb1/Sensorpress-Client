@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 
 public interface SpBaseClient {
