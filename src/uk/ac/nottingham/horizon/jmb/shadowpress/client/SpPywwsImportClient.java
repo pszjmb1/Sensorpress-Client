@@ -236,6 +236,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 		if(!directory.endsWith(File.separator)){
 			directory  = directory + File.separator;
 		}
+		LOGGER.log(Level.INFO, "Importing: "+directory+filename);
 		List<String> lines = readFile(directory + filename);
 		if(lines.isEmpty()){
 			LOGGER.log(Level.SEVERE, "No CSV rows found. Aborting import process.");
@@ -260,10 +261,38 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 		insertstringDec = insertstringDec.substring(0,
 				insertstringDec.length() - 2);
 		if(doInsertions()){
-			return new SpInsertionClientImpl(myClient, Level.INFO).insertImportRecord(filename, deviceId, timestamp);
+			return new SpInsertionClientImpl(myClient, Level.INFO).
+					insertImportRecord(filename, deviceId, timestamp);
 		}else{
 			return null;
 		}
 	}
+	
 
+
+	/**
+	 * Recursively imports all pywws files in a given directory
+	 * 
+	 * @param directory
+	 *            is the full directory path containing the file to import
+	 * @param deviceId
+	 *            is the id of the device whose values are imported for
+	 * @param horz_sp_readingset_info_id
+	 *            is the readingset_info_id to insert for the records
+	 * @return the query result or null if an error occurred
+	 */
+	@Override
+	public void importDirectory(String directory,
+			Integer deviceId, Integer horz_sp_readingset_info_id) {
+		File dir = new File(directory);
+		File allFiles[] = dir.listFiles();
+		for (File aFile : allFiles) {
+			if(aFile.isDirectory()){
+				importDirectory(aFile.getAbsolutePath(), deviceId, horz_sp_readingset_info_id);
+			}else{
+				importCsv(directory, aFile.getName(),
+						deviceId, horz_sp_readingset_info_id);
+			}				
+		}
+	}
 }

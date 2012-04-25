@@ -13,23 +13,40 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package uk.ac.nottingham.horizon.jmb.shadowpress.client;
-
 
 public interface SpCsvImportClient {
 
 	/**
-	 * Import a file with readings into SP 
-	 * @param directory is the full directory path containing the file to import
-	 * @param filename is the name of the file to import
-	 * @param deviceId is the id of the device whose values are imported for
-	 * @param horz_sp_readingset_info_id is the readingset_info_id to insert for the records
+	 * Import a file with readings into SP
+	 * 
+	 * @param directory
+	 *            is the full directory path containing the file to import
+	 * @param filename
+	 *            is the name of the file to import
+	 * @param deviceId
+	 *            is the id of the device whose values are imported for
+	 * @param horz_sp_readingset_info_id
+	 *            is the readingset_info_id to insert for the records
 	 * @return the query result
 	 */
-	public Object[] importCsv(String directory, 
-			String filename, Integer deviceId, 
+	public Object[] importCsv(String directory, String filename,
+			Integer deviceId, Integer horz_sp_readingset_info_id);
+
+	/**
+	 * Recursively imports all pywws files in a given directory
+	 * 
+	 * @param directory
+	 *            is the full directory path containing files to import
+	 * @param deviceId
+	 *            is the id of the device whose values are imported for
+	 * @param horz_sp_readingset_info_id
+	 *            is the readingset_info_id to insert for the records
+	 * @return the query result or null if an error occurred
+	 */
+	public void importDirectory(String directory, Integer deviceId, 
 			Integer horz_sp_readingset_info_id);
-	
+
 }

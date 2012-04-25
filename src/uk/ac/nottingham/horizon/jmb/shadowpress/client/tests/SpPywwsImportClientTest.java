@@ -3,7 +3,6 @@ package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -14,8 +13,6 @@ import org.junit.Test;
 
 import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpBaseClient;
 import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpPywwsImportClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpSelectionClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpSelectionClientImpl;
 import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpXMLRpcClient;
 
 public class SpPywwsImportClientTest {
@@ -96,22 +93,27 @@ public class SpPywwsImportClientTest {
 	}
 
 	@Test
-	public void testInsertValues() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testInsertImportRecord() {
+	public void testBuildInsertionStrings() {
 		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testImportCsv() {
 		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);
-		Object[] results = sc.importCsv("/home/pszjmb/experiments/sp", "2012-04-18.txt", 1, 1);
-		for(int i = 0; i < results.length; i++){
-			System.out.println(results[i]);
+		Object[] results = sc.importCsv("/home/pszjmb/experiments/sp",
+				"2012-04-06.txt", 1, 1);
+		if (null != results) {
+			for (int i = 0; i < results.length; i++) {
+				System.out.println(results[i]);
+			}
 		}
+	}
+
+	@Test
+	public void testImportDirectory() {
+		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);
+		sc.importDirectory("/home/pszjmb/experiments/sp",
+				1, 1);
 	}
 
 }

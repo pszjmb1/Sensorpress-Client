@@ -149,6 +149,17 @@ public class SpInsertionClientImplTest {
 
 
 	@Test
+	public void testInsertImportRecord() {
+		SpInsertionClient sc = new SpInsertionClientImpl(base, Level.INFO);
+		Object[] result = sc.insertImportRecord(
+				"a.txt", 9999, "2012-04-02 00:04:09");
+		Assert.assertEquals("{lastrecord=2012-04-02 00:04:09}", result[0].toString());
+	}
+	
+	
+
+
+	@Test
 	public void testInsertRecordsIntoReadingsets() {
 		fail("Not yet implemented");
 	}
