@@ -143,6 +143,16 @@ public class SpXMLRpcClient implements SpBaseClient {
 		pwrd = password;
 	}
 	
+	public void logStackTrace(Exception e){
+		StackTraceElement[] ste = e.getStackTrace();
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < ste.length; i++ ){
+			sb.append(ste[i].toString());
+			sb.append("\n");
+		}
+		LOGGER.severe(sb.toString());
+	}
+	
 	/**
 	 * Executes a client operation.
 	 * @param aClient is the client to perform the operation
@@ -159,6 +169,7 @@ public class SpXMLRpcClient implements SpBaseClient {
 				return (Object[])aClient.execute(operation, params);
 			} catch (XmlRpcException e) {
 				LOGGER.severe(e.getMessage());
+				logStackTrace(e);
 			}
 		}
 		return null;
@@ -179,6 +190,7 @@ public class SpXMLRpcClient implements SpBaseClient {
 				return (Object[])client.execute(operation, params);
 			} catch (XmlRpcException e) {
 				LOGGER.severe(e.getMessage());
+				logStackTrace(e);
 			}
 		}
 		return null;

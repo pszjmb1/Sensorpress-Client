@@ -36,6 +36,21 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 		return myClient.execute("shadowpress.insert_reading", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), 
 				type, value, readingset_id, reading_type});
+	}	
+
+	/**
+	 * Routine to insert import records into a DB via XML-RPC
+	 * @param type is the data_type to use (such as dec_4_1)
+	 * @param filname is the file that was imported
+	 * @param deviceInstanceId is the device instance that the data was captured from
+	 * @param timestamp is the last timestamp value from the imported file
+	 * @return the query result
+	 */
+	public Object[] insertImportRecord(String filname, Integer deviceInstanceId, 
+			String timestamp){			
+		return myClient.execute("shadowpress.insert_importRecord", 
+				new Object[]{myClient.getUser(),myClient.getPwrd(), 
+				filname, deviceInstanceId, timestamp});		
 	}
 
 	/**

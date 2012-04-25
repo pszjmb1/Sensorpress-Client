@@ -160,4 +160,28 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		//System.out.println(aQuery);
 		return myClient.doQueryXMLRPC(aQuery);
 	}
+	
+
+	/**
+	 *  Select most recent horz_sp_readingset.readingset_id for given device
+	 * @return Integer for the readingid
+	 */
+	@Override
+	public Integer selectLatestReadingsetIdForDevice(Integer device){
+		Integer retval = 1;
+		Object[] exec = myClient.execute(
+				"shadowpress.latestReadingsetIdForDevice", 
+				new Object[]{myClient.getUser(),myClient.getPwrd(), device});
+		if(exec.length < 1){
+			return retval;
+		}
+		try{
+			retval = Integer.valueOf(exec[0].toString().replace(
+					"{readingset_id=", "").replace("}", ""));
+		}catch(NumberFormatException e){
+			// Ignore the problem
+			retval = 1;
+		}
+		return retval;		
+	}
 }

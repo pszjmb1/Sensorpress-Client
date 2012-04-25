@@ -29,6 +29,16 @@ public interface SpInsertionClient{
 	public Object[] insertReading(String type, String value, 
 			Integer readingset_id, Integer reading_type);
 	/**
+	 * Routine to insert import records into a DB via XML-RPC
+	 * @param type is the data_type to use (such as dec_4_1)
+	 * @param filname is the file that was imported
+	 * @param deviceInstanceId is the device instance that the data was captured from
+	 * @param timestamp is the last timestamp value from the imported file
+	 * @return the query result
+	 */
+	public Object[] insertImportRecord(String filname, Integer deviceInstanceId, 
+			String timestamp);
+	/**
 	 * Inserts multiple records into SP readingset 
 	 * @param records are the values to insert
 	 * @return the insertion result

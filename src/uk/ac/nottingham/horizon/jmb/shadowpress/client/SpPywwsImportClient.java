@@ -31,6 +31,8 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	SpBaseClient myClient;
 	String timeThreshold = "23:55:00"; // presumes a five minute interval
 										// between readings
+	String readingSetInsert = "", insertstringInt = "", insertstringDec= "";
+	Integer readingSetId=-1;
 
 	private final static Logger LOGGER = Logger
 			.getLogger(SpPywwsImportClient.class.getName());
@@ -99,59 +101,100 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	}
 
 	/**
-	 * Checks a list of Pywws strings to see which line index is greater than the given timestamp 
-	 * @param lines is a list of pywws csv content
-	 * @param timestamp is in the format "hh:mm:ss"
+	 * Checks a list of Pywws strings to see which line index is greater than
+	 * the given timestamp
+	 * 
+	 * @param lines
+	 *            is a list of pywws csv content
+	 * @param timestamp
+	 *            is in the format "hh:mm:ss"
 	 * @return the index to begin copying from
 	 */
 	public Integer getStartingLine(List<String> lines, String timestamp) {
 		Iterator<String> it = lines.iterator();
 		String line;
 		int i = 0;
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			line = it.next();
 			String[] parts = line.split(" |,");
-			if(0 > timestamp.compareTo(parts[1])){
-				return i; 
+			if (0 > timestamp.compareTo(parts[1])) {
+				return i;
 			}
 			i++;
 		}
 		return null;
 	}
-
-	public String insertValues(String line, String readingSetInsert,
-			String insertstringInt, String insertstringDec) {
-		Integer hum_in = 1, temp_in = 2, hum_out = 3, temp_out = 4, abs_pressure = 5, wind_ave = 6, wind_gust = 7, wind_dir = 8, rain = 9;
-
-		String timestamp = null;
-		/*
-		 * timestamp = row.pop(0) readingSetInsert = readingSetInsert + "(" +
-		 * str(readingSetId) + ", '" + row.pop(0) + "'," +
-		 * str(horz_sp_deviceinstance_idhorz_sp_deviceinstance) + "," +
-		 * str(horz_sp_readingset_info_horz_sp_readingset_info_id) + ")," #Add
-		 * readings # The following magic numbers are the db ids for the
-		 * corresponding idhorz_sp_reading_type insertstringInt =
-		 * insertstringInt + row[hum_in] + ", " + str(readingSetId) + ",2),("
-		 * insertstringInt = insertstringInt + row[hum_out] + ", " +
-		 * str(readingSetId) + ",4),(" insertstringInt = insertstringInt +
-		 * row[wind_dir] + ", " + str(readingSetId) + ",7),(" insertstringDec =
-		 * insertstringDec + row[temp_in] + ", " + str(readingSetId) + ",3),("
-		 * insertstringDec = insertstringDec + row[temp_out] + ", " +
-		 * str(readingSetId) + ",1),(" insertstringDec = insertstringDec +
-		 * row[abs_pressure] + ", " + str(readingSetId) + ",5),("
-		 * insertstringDec = insertstringDec + row[wind_ave] + ", " +
-		 * str(readingSetId) + ",6),(" insertstringDec = insertstringDec +
-		 * row[wind_gust] + ", " + str(readingSetId) + ",8),(" insertstringDec =
-		 * insertstringDec + row[rain] + ", " + str(readingSetId) + ",9),("
-		 * readingSetId = readingSetId + 1
-		 */
-		return timestamp;
+	
+	private String getValue(String aVal){
+		if(null == aVal || "".equals(aVal)){
+			return "null";
+		}else{
+			return aVal;
+		}
 	}
 
-	public Object[] insertImportRecord(String filename, Integer deviceId,
-			String timestamp) {
-		// todo complete!
-		return null;
+	/**
+	 * Adds content to Strings for dataabase insertion  
+	 * @param csvRow is a row from a CSV file with Pywws content in the format:
+	 * 2012-04-18 00:28:42,5,33,22.4,85,5.1,983.4,1.0,2.0,10,77.4,0 
+	 * @param readingSetInsert is the insertion String for reading sets
+	 * @param insertstringInt is the insertion String for horz_sp_reading.value_int
+	 * @param insertstringDec is the insertion String for horz_sp_reading.value_dec_8_2
+	 * @param readingSetId is self explanatory 
+	 * @param deviceInstanceId is self explanatory
+	 * @param readingset_info_id is self explanatory
+	 * @return the timestamp value
+	 */
+	public String buildInsertionStrings(String csvRow, 
+			Integer deviceInstanceId, Integer readingset_info_id) {
+		Integer hum_in = 2, temp_in = 3, hum_out = 4, temp_out = 5, abs_pressure = 6, wind_ave = 7, wind_gust = 8, wind_dir = 9, rain = 10;
+
+		String[] values = csvRow.split(",");
+		/*for(int i = 0; i < values.length; i++){
+			System.out.println(i+": " +values[i]);
+		}*/
+		String timestamp = values[0];
+		readingSetInsert = readingSetInsert + "(" + readingSetId + ", '"
+				+ timestamp + "'," + deviceInstanceId + ","
+				+ readingset_info_id + "),";
+		insertstringInt = insertstringInt + getValue(values[hum_in]) + ", "
+				+ readingSetId + ",2),(";
+		insertstringInt = insertstringInt + getValue(values[hum_out]) + ", "
+				+ readingSetId + ",4),(";
+		insertstringInt = insertstringInt + getValue(values[wind_dir]) + ", "
+				+ readingSetId + ",7),(";
+		insertstringDec = insertstringDec + getValue(values[temp_in]) + 
+				", " + readingSetId + ",3),(";
+        insertstringDec = insertstringDec + getValue(values[temp_out]) + 
+        		", " + readingSetId + ",1),(";
+        insertstringDec = insertstringDec + getValue(values[abs_pressure]) + 
+        		", " + readingSetId + ",5),(";
+        insertstringDec = insertstringDec + getValue(values[wind_ave]) + 
+        		", " + readingSetId + ",6),(";
+        insertstringDec = insertstringDec + getValue(values[wind_gust]) + 
+        		", " + readingSetId + ",8),(";
+        insertstringDec = insertstringDec + getValue(values[rain]) + 
+        		", " + readingSetId + ",9),(";
+        readingSetId = readingSetId + 1;	    
+
+		return timestamp;
+	}
+	
+	private boolean doInsertions(){
+		Object[] results = myClient.doQueryXMLRPC(readingSetInsert);
+		if(null==results){
+			return false;
+		}	
+		//System.out.println(insertstringInt);
+		results = myClient.doQueryXMLRPC(insertstringInt);
+		if(null==results){
+			return false;
+		}
+		results = myClient.doQueryXMLRPC(insertstringDec);
+		if(null==results){
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -166,7 +209,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 *            is the id of the device whose values are imported for
 	 * @param horz_sp_readingset_info_id
 	 *            is the readingset_info_id to insert for the records
-	 * @return the query result
+	 * @return the query result or null if an error occurred
 	 */
 	@Override
 	public Object[] importCsv(String directory, String filename,
@@ -179,35 +222,48 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 				return null;
 			}
 		}
-		String readingSetInsert = "INSERT IGNORE INTO horz_sp_readingset "
+		readingSetInsert = "INSERT IGNORE INTO horz_sp_readingset "
 				+ "(`readingset_id`, `timestamp`, "
 				+ "`horz_sp_deviceinstance_idhorz_sp_deviceinstance`, "
 				+ "`horz_sp_readingset_info_horz_sp_readingset_info_id`)"
 				+ " VALUES ";
-		String insertstringDec = "INSERT IGNORE INTO `horz_sp_reading`"
+		insertstringDec = "INSERT IGNORE INTO `horz_sp_reading`"
 				+ "(`value_dec_8_2`,`horz_sp_readingset_readingset_id`, "
 				+ "`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
-		String insertstringInt = "INSERT IGNORE INTO `horz_sp_reading`"
+		insertstringInt = "INSERT IGNORE INTO `horz_sp_reading`"
 				+ "(`value_int`, `horz_sp_readingset_readingset_id`,"
 				+ " `horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
-		List<String> lines = readFile(directory + File.separator + filename);
+		if(!directory.endsWith(File.separator)){
+			directory  = directory + File.separator;
+		}
+		List<String> lines = readFile(directory + filename);
+		if(lines.isEmpty()){
+			LOGGER.log(Level.SEVERE, "No CSV rows found. Aborting import process.");
+			return null;
+		}
 		Integer startingLine = 0;
 		if (!(null == lastrecord)) {
 			startingLine = getStartingLine(lines, lastrecord);
 		}
 		String timestamp = null;
+		//TODO - Make a db transaction from nextReadingsetid to insertImportRecord
+		readingSetId = new SpSelectionClientImpl(
+				myClient, LOGGER.getLevel()).
+				selectLatestReadingsetIdForDevice(deviceId) + 1;
 		for (int i = startingLine; i < lines.size(); i++) {
-			timestamp = insertValues(lines.get(i), readingSetInsert,
-					insertstringInt, insertstringDec);
+			timestamp = buildInsertionStrings(lines.get(i), 
+					deviceId, horz_sp_readingset_info_id );
 		}
-		readingSetInsert.substring(0, readingSetInsert.length() - 1);
+		readingSetInsert = readingSetInsert.substring(0, readingSetInsert.length() - 1);
 		insertstringInt = insertstringInt.substring(0,
 				insertstringInt.length() - 2);
 		insertstringDec = insertstringDec.substring(0,
 				insertstringDec.length() - 2);
-		insertImportRecord(filename, deviceId, timestamp);
-
-		return null;
+		if(doInsertions()){
+			return new SpInsertionClientImpl(myClient, Level.INFO).insertImportRecord(filename, deviceId, timestamp);
+		}else{
+			return null;
+		}
 	}
 
 }

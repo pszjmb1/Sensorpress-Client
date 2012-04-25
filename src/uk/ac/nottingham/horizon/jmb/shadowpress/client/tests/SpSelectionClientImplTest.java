@@ -160,4 +160,18 @@ public class SpSelectionClientImplTest {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testSelectLatestReadingsetIdForDevice() {
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		Integer results = sc.selectLatestReadingsetIdForDevice(1);
+		Assert.assertEquals(new Integer(10726), results);
+	}
+
+	@Test
+	public void testSelectLatestReadingsetIdForDeviceWithBadData() {
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		Integer results = sc.selectLatestReadingsetIdForDevice(0);
+		Assert.assertEquals(new Integer(-1), results);
+	}
+
 }

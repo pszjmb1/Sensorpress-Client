@@ -61,5 +61,10 @@ public interface SpSelectionClient {
 	 * @return the query result
 	 */
 	public Object[] selectImportLastRecord(Integer devInst, String filename);
+	/**
+	 *  Select most recent horz_sp_readingset.readingset_id for given device
+	 * @return String for the readingid
+	 */
+	public Integer selectLatestReadingsetIdForDevice(Integer device);
 
 }
