@@ -18,10 +18,12 @@ public class SpReplicationClientImpl implements SpReplicationClient {
 	@Override
 	public void replicate(SpBaseClient client1, SpBaseClient client2) {
 		LOGGER.info("calling: intersectRecentReadingsets");
-		System.out.println("calling: intersectRecentReadingsets");
 		SpSelectionClient select = new SpSelectionClientImpl(client1, LOGGER.getLevel());
 		Object[] recentReadings = select.intersectRecentReadingsets(client1, client2);
-
+		if(null==recentReadings){			
+			LOGGER.severe("Failed to intersect recent readingsets. Aborting operation.");
+			return;
+		}
 		LOGGER.info("calling: insertRecordsIntoReadingsets");
 		SpInsertionClient insert = new SpInsertionClientImpl(client2, LOGGER.getLevel());
 		insert.insertRecordsIntoReadingsets(recentReadings);		

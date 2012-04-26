@@ -36,6 +36,13 @@ public interface SpBaseClient {
 	 */
 	public XmlRpcClient getComplexClient(String url,boolean reset, boolean store,HttpClient httpClient);	
 	/**
+	 * Setsup an httpClient for use through a proxy server
+	 * @param proxy_host
+	 * @param proxy_port
+	 * @return the proxy enabled httpClient
+	 */
+	public HttpClient setupProxy(String proxy_host, String proxy_port);
+	/**
 	 * Stores user details for accessing a Shadowpress instance
 	 * @param username
 	 * @param password
@@ -82,7 +89,15 @@ public interface SpBaseClient {
 	 * @param query is a query to pass to the server to perform
 	 * @return a query result 
 	 */
-	public Object[] doQueryXMLRPC(String query);	
+	public Object[] doQueryXMLRPC(String query);
+	/**
+	 * Sets the client to use a proxy
+	 * @param url
+	 * @param proxy_host
+	 * @param proxy_port
+	 * @return
+	 */
+	public XmlRpcClient setProxyClient(String url,	String proxy_host, String proxy_port);	
 	
 }
 	

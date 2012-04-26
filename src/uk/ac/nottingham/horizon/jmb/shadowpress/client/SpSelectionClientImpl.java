@@ -96,6 +96,9 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 				"`horz_sp_readingset` " +
 				"ORDER BY `timestamp` DESC LIMIT 1";
 		Object[] results = client2.doQueryXMLRPC(aQuery);
+		if(null == results){
+			return null;
+		}
 
 		// Select url1.readingsets > url2's most recent
 		aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset`";

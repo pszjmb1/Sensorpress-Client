@@ -31,14 +31,22 @@ public class ReplicationClient {
 		if (null == proxyUrl || "".equals(proxyUrl)) {
 			client1.simpleClient(uRL, true, true);
 		} else {
-			// TODO Complete this for complex proxy...
+			if(null == client1.setProxyClient(uRL, proxyUrl, proxyPort)){
+				String output = "Failed to get proxy client.";
+				System.err.println(output);
+				System.exit(1);
+			}
 		}
 
 		SpBaseClient client2 = new SpXMLRpcClient(user2, pwrd2, Level.INFO);
 		if (null == proxyUrl2|| "".equals(proxyUrl2)) {
 			client2.simpleClient(uRL2, true, true);
 		} else {
-			// TODO Complete this for complex proxy...
+			if(null == client2.setProxyClient(uRL2, proxyUrl2, proxyPort2)){
+				String output = "Failed to get proxy client.";
+				System.err.println(output);
+				System.exit(1);
+			}
 		}
 
 		SpReplicationClient replicator = new SpReplicationClientImpl(Level.INFO);
