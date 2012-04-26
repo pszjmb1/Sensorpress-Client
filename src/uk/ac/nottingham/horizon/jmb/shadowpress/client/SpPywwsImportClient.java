@@ -113,16 +113,18 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	public Integer getStartingLine(List<String> lines, String timestamp) {
 		Iterator<String> it = lines.iterator();
 		String line;
-		int i = 0;
+		int linenum = 0;
+		int compare;
 		while (it.hasNext()) {
 			line = it.next();
-			String[] parts = line.split(" |,");
-			if (0 > timestamp.compareTo(parts[1])) {
-				return i;
+			String[] parts = line.split(",");
+			compare = timestamp.compareTo(parts[0]);
+			if (0 > compare) {
+				return linenum;
 			}
-			i++;
+			linenum++;
 		}
-		return null;
+		return linenum;
 	}
 	
 	private String getValue(String aVal){
@@ -180,6 +182,10 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 		return timestamp;
 	}
 	
+	/**
+	 * Calls XML-RPC query for readingSetInsert, insertstringInt, and insertstringDec
+	 * @return false if any of the calls fail to deliver resul;ts, or true otherwise
+	 */
 	private boolean doInsertions(){
 		Object[] results = myClient.doQueryXMLRPC(readingSetInsert);
 		if(null==results){
@@ -195,6 +201,33 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Determines if the file has been completely imported 
+	 * @param deviceId
+	 * @param filename
+	 * @return a String with the lastrecord for partial import, 
+	 * "" for no import, or null if complete import
+	 */
+	public String checkFileImport(Integer deviceId, String filename){
+		// Ensure that file hasn't been imported already
+		String lastrecord = getlastrecord(deviceId, filename);
+		String temp;
+		if (null != lastrecord){
+			temp = lastrecord.replaceFirst("\\d{4}-\\d{2}-\\d{2}\\s", "");
+			if (!(null == lastrecord)) {
+				// If file has been completely imported ignore it
+				Integer i = timeThreshold.compareTo(temp);
+				if (0 >= i) {
+					return null;
+				}
+			}
+			return lastrecord;
+		}else{
+			return "";
+		}
+		
 	}
 
 	/**
@@ -214,13 +247,10 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	@Override
 	public Object[] importCsv(String directory, String filename,
 			Integer deviceId, Integer horz_sp_readingset_info_id) {
-		// Ensure that file hasn't been imported already
-		String lastrecord = getlastrecord(deviceId, filename);
-		if (!(null == lastrecord)) {
-			// If file has been completely imported ignore it
-			if (0 >= lastrecord.compareTo(timeThreshold)) {
-				return null;
-			}
+		String lastrecord = checkFileImport(deviceId, filename);
+		// If file was completely imported then exit this method
+		if(null == lastrecord){
+			return null;
 		}
 		readingSetInsert = "INSERT IGNORE INTO horz_sp_readingset "
 				+ "(`readingset_id`, `timestamp`, "
@@ -243,7 +273,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 			return null;
 		}
 		Integer startingLine = 0;
-		if (!(null == lastrecord)) {
+		if (!(null == lastrecord || "" == lastrecord)) {
 			startingLine = getStartingLine(lines, lastrecord);
 		}
 		String timestamp = null;

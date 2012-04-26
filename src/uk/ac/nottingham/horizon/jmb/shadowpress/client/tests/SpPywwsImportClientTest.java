@@ -96,12 +96,31 @@ public class SpPywwsImportClientTest {
 	public void testBuildInsertionStrings() {
 		fail("Not yet implemented");
 	}
+	@Test
+	public void testFileNeedsImporting(){
+		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);	
+		String answer = sc.checkFileImport(1, "2012-04-25.txt");
+		Assert.assertEquals("2012-04-25 13:34:32", answer);	
+	}
+	@Test
+	public void testFileNeedsImportingNullCase(){
+		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);	
+		String answer = sc.checkFileImport(1, "2012-04-24.txt");
+		Assert.assertEquals(null, answer);	
+	}
+	@Test
+	public void testFileNeedsImportingBlankCase(){
+		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);	
+		String answer = sc.checkFileImport(1, "2012-04-27.txt");
+		Assert.assertEquals("", answer);	
+	}
+
 
 	@Test
 	public void testImportCsv() {
 		SpPywwsImportClient sc = new SpPywwsImportClient(base, Level.INFO);
 		Object[] results = sc.importCsv("/home/pszjmb/experiments/sp",
-				"2012-04-06.txt", 1, 1);
+				"2012-04-25.txt", 1, 1);
 		if (null != results) {
 			for (int i = 0; i < results.length; i++) {
 				System.out.println(results[i]);
