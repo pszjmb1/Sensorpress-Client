@@ -55,6 +55,7 @@ public class SpSelectionClientImplTest {
 	@Test
 	public void testQuerySelect() {
 		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
+		//String aQuery = "SELECT `lastrecord` FROM `shadowpress`.`horz_sp_import` WHERE filename = \"2012-03-22.txt\" AND `horz_sp_deviceinstance_idhorz_sp_deviceinstance` = 1 ORDER BY `lastrecord` DESC LIMIT 1";
 		Object[] results = base.doQueryXMLRPC(aQuery);
 		/*
 		 * for(int i = 0; i < results.length; i++){
@@ -172,6 +173,13 @@ public class SpSelectionClientImplTest {
 		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
 		Integer results = sc.selectLatestReadingsetIdForDevice(0);
 		Assert.assertEquals(new Integer(-1), results);
+	}
+	
+	@Test
+	public void testSelectLastImportRecord() {
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		String results = sc.selectLastImportRecord(1, "2012-03-22.txt");
+		Assert.assertEquals("{lastrecord=2012-03-22 23:55:09}", results);
 	}
 
 }

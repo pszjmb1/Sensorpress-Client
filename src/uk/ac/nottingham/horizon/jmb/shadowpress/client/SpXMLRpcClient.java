@@ -258,6 +258,7 @@ public class SpXMLRpcClient implements SpBaseClient {
 	 */
 	@Override
 	public Object[] doQueryXMLRPC(String query) {
+		LOGGER.info(query);
 		return execute("shadowpress.query", new Object[] { user, pwrd, query });
 	}
 

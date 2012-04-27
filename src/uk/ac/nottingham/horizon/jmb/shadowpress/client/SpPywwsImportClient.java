@@ -90,10 +90,10 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 * @return horz_sp_import.lastrecord or null if file has not been imported
 	 */
 	public String getlastrecord(Integer device, String filename) {
-		Object[] result = new SpSelectionClientImpl(myClient, LOGGER.getLevel())
-				.selectImportLastRecord(device, filename);
-		if (result.length == 1) {
-			return result[0].toString().replace("{lastrecord=", "")
+		String result = new SpSelectionClientImpl(myClient, LOGGER.getLevel())
+				.selectLastImportRecord(device, filename);
+		if (null!= result) {
+			return result.replace("{lastrecord=", "")
 					.replace("}", "");
 		} else {
 			return null;
@@ -187,15 +187,17 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 * @return false if any of the calls fail to deliver resul;ts, or true otherwise
 	 */
 	private boolean doInsertions(){
+		LOGGER.log(Level.INFO, readingSetInsert);
 		Object[] results = myClient.doQueryXMLRPC(readingSetInsert);
 		if(null==results){
 			return false;
 		}	
-		//System.out.println(insertstringInt);
+		LOGGER.log(Level.INFO, insertstringInt);
 		results = myClient.doQueryXMLRPC(insertstringInt);
 		if(null==results){
 			return false;
 		}
+		LOGGER.log(Level.INFO, insertstringDec);
 		results = myClient.doQueryXMLRPC(insertstringDec);
 		if(null==results){
 			return false;

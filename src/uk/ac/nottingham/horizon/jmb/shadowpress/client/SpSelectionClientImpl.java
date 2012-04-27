@@ -187,4 +187,28 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		}
 		return retval;		
 	}
+	
+
+	/**
+	 *  Select most recent import record for given file on given device
+	 *  @param device is the device id to check
+	 *  @param filename is the filename to check
+	 * @return String with the recent timestamp or null on error or none found.
+	 */
+	@Override
+	public String selectLastImportRecord(Integer device, String filename){
+		String retval = null;
+		Object[] exec = myClient.execute(
+				"shadowpress.select_lastimportRecord", 
+				new Object[]{myClient.getUser(),myClient.getPwrd(), filename, device});
+		if(exec.length < 1){
+			return retval;
+		}
+		try{
+			retval = exec[0].toString();
+		}catch(Exception e){
+			retval = null;
+		}
+		return retval;		
+	}
 }

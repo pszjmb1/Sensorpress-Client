@@ -26,7 +26,8 @@ public class SpReplicationClientImpl implements SpReplicationClient {
 		}
 		LOGGER.info("calling: insertRecordsIntoReadingsets");
 		SpInsertionClient insert = new SpInsertionClientImpl(client2, LOGGER.getLevel());
-		insert.insertRecordsIntoReadingsets(recentReadings);		
+		insert.insertRecordsIntoReadingsets(recentReadings);	
+		LOGGER.info("calling: insertRecentReadings");	
 		insert.insertRecentReadings(client1, client2);
 		
 		LOGGER.info("Complete.");
