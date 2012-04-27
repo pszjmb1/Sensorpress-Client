@@ -15,9 +15,12 @@ public class SpSelectionClientImplTest {
 	static String defaultURL = "http://192.168.56.101/wordpress/xmlrpc.php";
 	static String user = "admin";
 	static String pwrd = "qwerty";
-	static String url2 = "http://192.168.56.101/wordpress/xmlrpc.php";
-	static String user2 = "admin";
-	static String pwrd2 = "qwerty";
+	// see rsyncaddon for real values
+	static String url2 = "http://...";
+	static String user2 = "...";
+	static String pwrd2 = "...";
+	static String proxy_host = "...";
+	static String proxy_port = "...";
 	static String lastid = "-1";
 	static SpBaseClient base;
 
@@ -153,7 +156,18 @@ public class SpSelectionClientImplTest {
 
 	@Test
 	public void testIntersectRecentReadingsets() {
-		fail("Not yet implemented");
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		SpBaseClient client2 = new SpXMLRpcClient(user2, pwrd2, Level.INFO);
+
+		if(null == client2.setProxyClient(url2, proxy_host, proxy_port)){
+			assert(false);
+		}
+		Object[] results = sc.intersectRecentReadingsets(base,client2);
+
+		for(int i = 0; i < results.length; i++){
+			System.out.println(results[i]);
+		}
+		//Assert.assertEquals(new Integer(10726), results);
 	}
 
 	@Test
