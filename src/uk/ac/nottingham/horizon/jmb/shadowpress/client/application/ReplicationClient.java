@@ -64,6 +64,9 @@ public class ReplicationClient {
 					+ "\n * @param proxyUrl2 [may be \"\"]"
 					+ "\n * @param proxyPort2 [may be \"\"]";
 			System.err.println(output);
+			for(int i = 0; i <args.length; i++){
+				System.err.println(args[i]+"\n");				
+			}
 			System.exit(1);
 		}
 		ReplicationClient ic = new ReplicationClient();

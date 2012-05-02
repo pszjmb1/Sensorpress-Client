@@ -66,5 +66,12 @@ public interface SpSelectionClient {
 	 * @return String for the readingid
 	 */
 	public Integer selectLatestReadingsetIdForDevice(Integer device);
+	/**
+	 *  Select most recent import record for given file on given device
+	 *  @param device is the device id to check
+	 *  @param filename is the filename to check
+	 * @return String with the recent timestamp
+	 */
+	public String selectLastImportRecord(Integer device, String filename);
 
 }
