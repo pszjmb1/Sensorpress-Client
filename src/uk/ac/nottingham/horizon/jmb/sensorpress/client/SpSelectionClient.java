@@ -1,4 +1,4 @@
-/* Interface defining selection client operations Shadowpress.
+/* Interface defining selection client operations Sensorpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 public interface SpSelectionClient {
 	/**
@@ -31,12 +31,12 @@ public interface SpSelectionClient {
 	 */
 	public Object[] selectRecentBlogPosts();
 	/**
-	 * Routine to show Shadowpress tables from XML-RPC
+	 * Routine to show Sensorpress tables from XML-RPC
 	 * @return the resultant rowset
 	 */
 	public Object[] tablesFromXMLRPC();
 	/**
-	 * Routine to show Shadowpress table columns from XML-RPC
+	 * Routine to show Sensorpress table columns from XML-RPC
 	 * @param table is the table to display the columns for
 	 * @return the resultant rowset
 	 */

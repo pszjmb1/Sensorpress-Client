@@ -1,14 +1,14 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client.tests;
 
 import java.util.logging.Level;
 
 import org.junit.Test;
 
 
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpBaseClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpReplicationClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpReplicationClientImpl;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpXMLRpcClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpBaseClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpReplicationClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpReplicationClientImpl;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpXMLRpcClient;
 
 public class SpReplicationClientTest {
 	

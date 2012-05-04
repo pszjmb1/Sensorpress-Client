@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +11,7 @@ public class SpReplicationClientImpl implements SpReplicationClient {
 	}
 
 	/**
-	 * Replicates one shadowpress instance (client1) into another one (client2)
+	 * Replicates one sensorpress instance (client1) into another one (client2)
 	 * @param client1 contains the data to replicate
 	 * @param client2 receives new data
 	 */

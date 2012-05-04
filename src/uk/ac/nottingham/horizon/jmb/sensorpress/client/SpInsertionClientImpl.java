@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 	public Object[] insertReading(String type, String value,
 			Integer readingset_id, Integer reading_type) {		
 			
-		return myClient.execute("shadowpress.insert_reading", 
+		return myClient.execute("sensorpress.insert_reading", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), 
 				type, value, readingset_id, reading_type});
 	}	
@@ -48,7 +48,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 	 */
 	public Object[] insertImportRecord(String filname, Integer deviceInstanceId, 
 			String timestamp){			
-		return myClient.execute("shadowpress.insert_importRecord", 
+		return myClient.execute("sensorpress.insert_importRecord", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), 
 				filname, deviceInstanceId, timestamp});		
 	}
@@ -60,10 +60,10 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 	 */
 	@Override
 	public Object[] insertRecordsIntoReadingsets(Object[] records) {
-		String aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_readingset`("
+		String aQuery = "INSERT IGNORE INTO `sensorpress`.`hn_sp_readingset`("
 				+ "timestamp,readingset_id,"
-				+ "horz_sp_readingset_info_horz_sp_readingset_info_id,"
-				+ "horz_sp_deviceinstance_idhorz_sp_deviceinstance) "
+				+ "readingset_info_id,"
+				+ "deviceinstance_id) "
 				+ "VALUES";
 		String result;
 		for (int i = 0; i < records.length; i++) {
@@ -90,7 +90,7 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 		SpSelectionClient select = new SpSelectionClientImpl(client1, LOGGER.getLevel());
 		String lowestid = select.selectLowestReadingIdForReadingSetTimestamp();
 		String aQuery = 
-				"SELECT COUNT(*) FROM `horz_sp_reading` WHERE idhorz_sp_reading >=" + lowestid;
+				"SELECT COUNT(*) FROM `hn_sp_reading` WHERE reading_id >=" + lowestid;
 		Object[] records = client1.doQueryXMLRPC(aQuery);
 		if (records != null && records.length > 0) { 
 			Integer numrecords = Integer.valueOf(records[0].toString().replace(
@@ -98,14 +98,14 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 			Integer offsetIncrease = 500;
 			HashMap<String, String> dictionary;
 			for(int i = 0; i < numrecords; i+= offsetIncrease){
-				aQuery = "SELECT * FROM `horz_sp_reading` " +
-							"WHERE idhorz_sp_reading >=" + lowestid + " LIMIT " + i + "," + offsetIncrease;
+				aQuery = "SELECT * FROM `hn_sp_reading` " +
+							"WHERE reading_id >=" + lowestid + " LIMIT " + i + "," + offsetIncrease;
 				records = client1.doQueryXMLRPC(aQuery);
 				if (records != null && records.length > 0) {
-					aQuery = "INSERT IGNORE INTO `shadowpress`.`horz_sp_reading` " +
-							"(`idhorz_sp_reading`, `value_blob`, `value_dec_4_1`, `value_dec_5_2`, `value_dec_8_2`, " +
-							"`value_dec_12_6`, `value_int`, `horz_sp_readingset_readingset_id`, " +
-							"`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES";
+					aQuery = "INSERT IGNORE INTO `sensorpress`.`hn_sp_reading` " +
+							"(`reading_id`, `value_blob`, `value_dec_4_1`, `value_dec_5_2`, `value_dec_8_2`, " +
+							"`value_dec_12_6`, `value_int`, `readingset_id`, " +
+							"`reading_type_id`) VALUES";
 					String result;
 					for (int j = 0; j < records.length; j++) {
 						dictionary = new HashMap<String, String>();
@@ -122,12 +122,12 @@ public class SpInsertionClientImpl implements SpInsertionClient {
 							}
 							dictionary.put(fields2[0].trim(), val);
 						}
-						aQuery = aQuery + "('" + dictionary.get("idhorz_sp_reading") + "'," + 
+						aQuery = aQuery + "('" + dictionary.get("reading_id") + "'," + 
 								 dictionary.get("value_blob") + "," + dictionary.get("value_dec_4_1") + "," +
 								 dictionary.get("value_dec_5_2") + "," + dictionary.get("value_dec_8_2") + "," +
 								 dictionary.get("value_dec_12_6") + "," + dictionary.get("value_int") + "," +
-								 dictionary.get("horz_sp_readingset_readingset_id") + "," + 
-								 dictionary.get("horz_sp_reading_type_idhorz_sp_reading_type") + "),";
+								 dictionary.get("readingset_id") + "," + 
+								 dictionary.get("reading_type_id") + "),";
 					}		
 					client2.doQueryXMLRPC(aQuery.substring(0,aQuery.length()-1));			
 				}

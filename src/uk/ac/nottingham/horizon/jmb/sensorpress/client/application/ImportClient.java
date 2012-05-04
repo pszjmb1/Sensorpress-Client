@@ -1,10 +1,10 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.application;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client.application;
 
 import java.util.logging.Level;
 
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpBaseClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpPywwsImportClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpXMLRpcClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpBaseClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpPywwsImportClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpXMLRpcClient;
 
 public class ImportClient {
 
@@ -68,7 +68,7 @@ public class ImportClient {
 	public static void main(String args[]) {
 		if (!(args.length == 6 || args.length == 8)) {
 			String output = "ImportClient imports Pywws CSV files "
-					+ "from a directory into Shadowpress."
+					+ "from a directory into Sensorpress."
 					+ "\n@param uRL is the url to connect to"
 					+ "\n@param user is the username for the SP client"
 					+ "\n@param pwrd is password corresponding to the username"

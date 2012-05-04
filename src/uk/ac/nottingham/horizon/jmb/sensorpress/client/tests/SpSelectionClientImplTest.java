@@ -1,14 +1,15 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client.tests;
 
 import static org.junit.Assert.*;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import java.util.logging.Level;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpBaseClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpSelectionClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpSelectionClientImpl;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpXMLRpcClient;
+
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpBaseClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpSelectionClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpSelectionClientImpl;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpXMLRpcClient;
 
 public class SpSelectionClientImplTest {
 
@@ -26,11 +27,11 @@ public class SpSelectionClientImplTest {
 
 	@BeforeClass
 	public static void setLastIdValue() {
-		base = new SpXMLRpcClient(user, pwrd, Level.INFO);
+		base = new SpXMLRpcClient(user, pwrd, Level.INFO, "sensorpress");
 		base.simpleClient(defaultURL, true, true);
 		String aQuery = 
-				"SELECT `idhorz_sp_reading` FROM `shadowpress`." +
-				"`horz_sp_reading` ORDER BY `idhorz_sp_reading` " +
+				"SELECT `reading_id` FROM `sensorpress`." +
+				"`hn_sp_reading` ORDER BY `reading_id` " +
 				"DESC LIMIT 1";
 
 		Object[] results = base.doQueryXMLRPC(aQuery);
@@ -57,8 +58,8 @@ public class SpSelectionClientImplTest {
 	
 	@Test
 	public void testQuerySelect() {
-		String aQuery = "SELECT * FROM `shadowpress`.`horz_sp_readingset_info` ORDER BY `horz_sp_readingset_info_id` DESC LIMIT 10";
-		//String aQuery = "SELECT `lastrecord` FROM `shadowpress`.`horz_sp_import` WHERE filename = \"2012-03-22.txt\" AND `horz_sp_deviceinstance_idhorz_sp_deviceinstance` = 1 ORDER BY `lastrecord` DESC LIMIT 1";
+		String aQuery = "SELECT * FROM `sensorpress`.`hn_sp_readingset_info` ORDER BY `readingset_info_id` DESC LIMIT 10";
+		//String aQuery = "SELECT `lastrecord` FROM `shadowpress`.`hn_sp_import` WHERE filename = \"2012-03-22.txt\" AND `hn_sp_deviceinstance_idhn_sp_deviceinstance` = 1 ORDER BY `lastrecord` DESC LIMIT 1";
 		Object[] results = base.doQueryXMLRPC(aQuery);
 		/*
 		 * for(int i = 0; i < results.length; i++){
@@ -82,7 +83,7 @@ public class SpSelectionClientImplTest {
 	@Test
 	public void testColumns() {
 		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
-		Object[] results = sc.columnsFromXMLRPC("horz_sp_reading");
+		Object[] results = sc.columnsFromXMLRPC("hn_sp_reading");
 		Assert.assertEquals(9, results.length);
 		for (int i = 0; i < results.length; i++) {
 			System.out.println(results[i]);
@@ -95,7 +96,7 @@ public class SpSelectionClientImplTest {
 		Object[] results = sc.select("reading", 10);
 		Assert.assertEquals(10, results.length);
 		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals(lastid, outs[7].split("=")[1]);
+		Assert.assertEquals(lastid, outs[8].split("=")[1].replaceAll("}", ""));
 	}
 
 	@Test
@@ -104,7 +105,7 @@ public class SpSelectionClientImplTest {
 		Object[] results = sc.select("readingset", 10);
 		Assert.assertEquals(10, results.length);
 		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals(" readingset_id=10726", outs[1]);
+		Assert.assertEquals(" readingset_id=13187", outs[1]);
 		/*
 		 * for(int i = 0; i < outs.length; i++){ System.out.println(outs[i]); }
 		 */
@@ -143,7 +144,7 @@ public class SpSelectionClientImplTest {
 				"deviceinstance", 10);
 		Assert.assertEquals(1, results.length);
 		String[] outs = results[0].toString().split(",");
-		Assert.assertEquals("{idhorz_sp_deviceinstance=1", outs[0]);
+		Assert.assertEquals("{description=Horizon Weather Station 1", outs[0]);
 		/*
 		 * for(int i = 0; i < outs.length; i++){ System.out.println(outs[i]); }
 		 */
@@ -157,15 +158,16 @@ public class SpSelectionClientImplTest {
 	@Test
 	public void testIntersectRecentReadingsets() {
 		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
-		SpBaseClient client2 = new SpXMLRpcClient(user2, pwrd2, Level.INFO);
+		SpBaseClient client2 = new SpXMLRpcClient(user2, pwrd2, Level.INFO, "sensorpress");
 
 		if(null == client2.setProxyClient(url2, proxy_host, proxy_port)){
 			assert(false);
 		}
 		Object[] results = sc.intersectRecentReadingsets(base,client2);
-
-		for(int i = 0; i < results.length; i++){
-			System.out.println(results[i]);
+		if(null !=results){
+			for(int i = 0; i < results.length; i++){
+				System.out.println(results[i]);
+			}
 		}
 		//Assert.assertEquals(new Integer(10726), results);
 	}
@@ -179,7 +181,7 @@ public class SpSelectionClientImplTest {
 	public void testSelectLatestReadingsetIdForDevice() {
 		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
 		Integer results = sc.selectLatestReadingsetIdForDevice(1);
-		Assert.assertEquals(new Integer(10726), results);
+		Assert.assertEquals(new Integer(13187), results);
 	}
 
 	@Test

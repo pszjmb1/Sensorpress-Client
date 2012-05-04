@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client.tests;
 
 import static org.junit.Assert.*;
 

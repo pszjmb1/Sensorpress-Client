@@ -1,4 +1,4 @@
-/* Interface defining replication client operations for Shadowpress.
+/* Interface defining replication client operations for Sensorpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 public interface SpReplicationClient {
 	

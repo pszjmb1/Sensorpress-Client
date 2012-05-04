@@ -1,4 +1,4 @@
-/* Pywws data CSV import client for Shadowpress.
+/* Pywws data CSV import client for Sensorpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -242,13 +242,13 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 *            is the name of the file to import
 	 * @param deviceId
 	 *            is the id of the device whose values are imported for
-	 * @param horz_sp_readingset_info_id
+	 * @param readingset_info_id
 	 *            is the readingset_info_id to insert for the records
 	 * @return the query result or null if an error occurred
 	 */
 	@Override
 	public Object[] importCsv(String directory, String filename,
-			Integer deviceId, Integer horz_sp_readingset_info_id) {
+			Integer deviceId, Integer readingset_info_id) {
 		String lastrecord = checkFileImport(deviceId, filename);
 		// If file was completely imported then exit this method
 		if(null == lastrecord){
@@ -256,15 +256,15 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 		}
 		readingSetInsert = "INSERT IGNORE INTO horz_sp_readingset "
 				+ "(`readingset_id`, `timestamp`, "
-				+ "`horz_sp_deviceinstance_idhorz_sp_deviceinstance`, "
-				+ "`horz_sp_readingset_info_horz_sp_readingset_info_id`)"
+				+ "`deviceinstance_id`, "
+				+ "`readingset_info_id`)"
 				+ " VALUES ";
 		insertstringDec = "INSERT IGNORE INTO `horz_sp_reading`"
-				+ "(`value_dec_8_2`,`horz_sp_readingset_readingset_id`, "
-				+ "`horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
+				+ "(`value_dec_8_2`,`readingset_id`, "
+				+ "`reading_type_id`) VALUES (";
 		insertstringInt = "INSERT IGNORE INTO `horz_sp_reading`"
-				+ "(`value_int`, `horz_sp_readingset_readingset_id`,"
-				+ " `horz_sp_reading_type_idhorz_sp_reading_type`) VALUES (";
+				+ "(`value_int`, `readingset_id`,"
+				+ " `reading_type_id`) VALUES (";
 		if(!directory.endsWith(File.separator)){
 			directory  = directory + File.separator;
 		}
@@ -285,7 +285,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 				selectLatestReadingsetIdForDevice(deviceId) + 1;
 		for (int i = startingLine; i < lines.size(); i++) {
 			timestamp = buildInsertionStrings(lines.get(i), 
-					deviceId, horz_sp_readingset_info_id );
+					deviceId, readingset_info_id );
 		}
 		readingSetInsert = readingSetInsert.substring(0, readingSetInsert.length() - 1);
 		insertstringInt = insertstringInt.substring(0,
@@ -309,21 +309,21 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 *            is the full directory path containing the file to import
 	 * @param deviceId
 	 *            is the id of the device whose values are imported for
-	 * @param horz_sp_readingset_info_id
+	 * @param readingset_info_id
 	 *            is the readingset_info_id to insert for the records
 	 * @return the query result or null if an error occurred
 	 */
 	@Override
 	public void importDirectory(String directory,
-			Integer deviceId, Integer horz_sp_readingset_info_id) {
+			Integer deviceId, Integer readingset_info_id) {
 		File dir = new File(directory);
 		File allFiles[] = dir.listFiles();
 		for (File aFile : allFiles) {
 			if(aFile.isDirectory()){
-				importDirectory(aFile.getAbsolutePath(), deviceId, horz_sp_readingset_info_id);
+				importDirectory(aFile.getAbsolutePath(), deviceId, readingset_info_id);
 			}else{
 				importCsv(directory, aFile.getName(),
-						deviceId, horz_sp_readingset_info_id);
+						deviceId, readingset_info_id);
 			}				
 		}
 	}

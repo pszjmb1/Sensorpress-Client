@@ -1,4 +1,4 @@
-package uk.ac.nottingham.horizon.jmb.shadowpress.client.tests;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client.tests;
 
 import static org.junit.Assert.*;
 
@@ -9,10 +9,10 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpBaseClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpInsertionClient;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpInsertionClientImpl;
-import uk.ac.nottingham.horizon.jmb.shadowpress.client.SpXMLRpcClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpBaseClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpInsertionClient;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpInsertionClientImpl;
+import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpXMLRpcClient;
 
 public class SpInsertionClientImplTest {
 	static String defaultURL = "http://192.168.56.101/wordpress/xmlrpc.php";

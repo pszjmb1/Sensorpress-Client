@@ -1,4 +1,4 @@
-/* XML-RPC based implementation of client operations for Shadowpress.
+/* XML-RPC based implementation of client operations for Sensorpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,11 +35,26 @@ public class SpXMLRpcClient implements SpBaseClient {
 	XmlRpcClient client;
 	String user;
 	String pwrd;
+	String dbname;
 
+	/**
+	 * Default constructor uses the "sensorpress database"
+	 * @param username
+	 * @param password
+	 * @param level
+	 */
 	public SpXMLRpcClient(String username, String password, Level level) {
 		LOGGER.setLevel(level);
 		user = username;
 		pwrd = password;
+		dbname = "sensorpress";
+	}
+
+	public SpXMLRpcClient(String username, String password, Level level, String databaseName) {
+		LOGGER.setLevel(level);
+		user = username;
+		pwrd = password;
+		dbname = databaseName;
 	}
 
 	public String getUser() {
@@ -57,6 +72,16 @@ public class SpXMLRpcClient implements SpBaseClient {
 	public void setPwrd(String pwrd) {
 		this.pwrd = pwrd;
 	}
+
+	public String getDbName() {
+		return dbname;
+	}
+
+	public void setDbName(String DbName) {
+		this.dbname = DbName;
+	}
+	
+	
 
 	/**
 	 * Retrieves a configured XmlRpcClient client.
@@ -178,7 +203,7 @@ public class SpXMLRpcClient implements SpBaseClient {
 	}
 
 	/**
-	 * Stores user details for accessing a Shadowpress instance
+	 * Stores user details for accessing a Sensorpress instance
 	 * 
 	 * @param username
 	 * @param password
@@ -240,6 +265,11 @@ public class SpXMLRpcClient implements SpBaseClient {
 			return null;
 		} else {
 			try {
+				/*System.out.println(operation);
+				for(int i = 0; i < params.length; i ++){
+
+					System.out.println(params[i]);
+				}*/
 				return (Object[]) client.execute(operation, params);
 			} catch (Exception e) {
 				LOGGER.severe(e.getMessage());
@@ -258,8 +288,8 @@ public class SpXMLRpcClient implements SpBaseClient {
 	 */
 	@Override
 	public Object[] doQueryXMLRPC(String query) {
-		LOGGER.info(query);
-		return execute("shadowpress.query", new Object[] { user, pwrd, query });
+		LOGGER.info(dbname+".query: " + user + ":"+ pwrd + ":"+ query);
+		return execute(dbname+".query", new Object[] { user, pwrd, query });
 	}
 
 }

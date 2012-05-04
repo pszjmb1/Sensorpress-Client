@@ -1,4 +1,4 @@
-/* Interface defining basic client operations Shadowpress.
+/* Interface defining basic client operations for sensorpress.
  Copyright (C) 2012  Jesse Blum (JMB)
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package uk.ac.nottingham.horizon.jmb.shadowpress.client;
+package uk.ac.nottingham.horizon.jmb.sensorpress.client;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.client.XmlRpcClient;
 
@@ -68,6 +68,16 @@ public interface SpBaseClient {
 	 * @param pwrd is the password
 	 */
 	public void setPwrd(String pwrd);
+	/**
+	 * Returns the database associated with this client
+	 * @return a String for the database
+	 */
+	public String getDbName();
+	/**
+	 * Sets the database associated with this client
+	 * @param databaseName is the name of the database to access
+	 */
+	public void setDbName(String databaseName);
 	/**
 	 * Executes a client operation.
 	 * @param aClient is the client to perform the operation
