@@ -73,5 +73,17 @@ public interface SpSelectionClient {
 	 * @return String with the recent timestamp
 	 */
 	public String selectLastImportRecord(Integer device, String filename);
+	/**
+	 * Selects readings within a date range for a given device 
+	 * @param device is the device id
+	 * @param reading_type_id is self explanatory
+	 * @param datatype is self explanatory 
+	 * @param startdatetime is the begining of the range
+	 * @param stopdatetime is the end of the range
+	 * @return
+	 */
+	public Object[] selectReadingsForDeviceInstanceByDateRange(
+			Integer device, Integer reading_type_id, String datatype, 
+			String startdatetime, String stopdatetime);
 
 }

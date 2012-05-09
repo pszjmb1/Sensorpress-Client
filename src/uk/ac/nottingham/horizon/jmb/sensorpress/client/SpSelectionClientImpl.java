@@ -211,4 +211,23 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		}
 		return retval;		
 	}
+	/**
+	 * Selects readings within a date range for a given device 
+	 * @param device is the device id
+	 * @param reading_type_id is self explanatory
+	 * @param datatype is self explanatory 
+	 * @param startdatetime is the begining of the range
+	 * @param stopdatetime is the end of the range
+	 * @return an obj[] containing: readingset_id, timestamp and value
+	 */
+	@Override
+	public Object[] selectReadingsForDeviceInstanceByDateRange(
+			Integer device, Integer reading_type_id, String datatype, 
+			String startdatetime, String stopdatetime){
+		return myClient.execute(
+				"sensorpress.readingsForDeviceInstanceByDateRange", 
+				new Object[]{myClient.getUser(),myClient.getPwrd(), device,
+						reading_type_id,datatype,startdatetime,stopdatetime});	
+		
+	}
 }

@@ -197,5 +197,16 @@ public class SpSelectionClientImplTest {
 		String results = sc.selectLastImportRecord(1, "2012-03-22.txt");
 		Assert.assertEquals("{lastrecord=2012-03-22 23:55:09}", results);
 	}
-
+	
+	@Test
+	public void testSelectReadingsForDeviceInstanceByDateRange() {
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		Object[] results = sc.selectReadingsForDeviceInstanceByDateRange(
+				1,2,"value_int", "2012-03-22", "2012-03-23");
+		if(null !=results){
+			for(int i = 0; i < results.length; i++){
+				System.out.println(results[i]);
+			}
+		}
+	}
 }
