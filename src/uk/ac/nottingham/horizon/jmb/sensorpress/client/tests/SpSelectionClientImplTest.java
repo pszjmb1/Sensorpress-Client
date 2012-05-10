@@ -185,6 +185,13 @@ public class SpSelectionClientImplTest {
 	}
 
 	@Test
+	public void testSelectLatestReadingsetId() {
+		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
+		Integer results = sc.selectLatestReadingsetId();
+		Assert.assertEquals(new Integer(13187), results);
+	}
+
+	@Test
 	public void testSelectLatestReadingsetIdForDeviceWithBadData() {
 		SpSelectionClient sc = new SpSelectionClientImpl(base, Level.INFO);
 		Integer results = sc.selectLatestReadingsetIdForDevice(0);

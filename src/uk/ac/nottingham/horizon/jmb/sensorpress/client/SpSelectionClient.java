@@ -65,7 +65,11 @@ public interface SpSelectionClient {
 	 *  Select most recent horz_sp_readingset.readingset_id for given device
 	 * @return String for the readingid
 	 */
-	public Integer selectLatestReadingsetIdForDevice(Integer device);
+	public Integer selectLatestReadingsetIdForDevice(Integer device);/**
+	 *  Select most recent hn_sp_readingset.readingset_id
+	 * @return Integer for the readingset_id
+	 */
+	public Integer selectLatestReadingsetId();
 	/**
 	 *  Select most recent import record for given file on given device
 	 *  @param device is the device id to check

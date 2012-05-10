@@ -164,14 +164,13 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		return myClient.doQueryXMLRPC(aQuery);
 	}
 	
-
 	/**
 	 *  Select most recent hn_sp_readingset.readingset_id for given device
 	 * @return Integer for the readingid
 	 */
 	@Override
 	public Integer selectLatestReadingsetIdForDevice(Integer device){
-		Integer retval = 1;
+		Integer retval = -1;
 		Object[] exec = myClient.execute(
 				"sensorpress.latestReadingsetIdForDevice", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), device});
@@ -183,7 +182,30 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 					"{readingset_id=", "").replace("}", ""));
 		}catch(NumberFormatException e){
 			// Ignore the problem
-			retval = 1;
+			retval = -1;
+		}
+		return retval;		
+	}
+	
+	/**
+	 *  Select most recent hn_sp_readingset.readingset_id
+	 * @return Integer for the readingset_id
+	 */
+	@Override
+	public Integer selectLatestReadingsetId(){
+		Integer retval = -1;
+		Object[] exec = myClient.execute(
+				"sensorpress.latestReadingsetId", 
+				new Object[]{myClient.getUser(),myClient.getPwrd()});
+		if(exec.length < 1){
+			return retval;
+		}
+		try{
+			retval = Integer.valueOf(exec[0].toString().replace(
+					"{readingset_id=", "").replace("}", ""));
+		}catch(NumberFormatException e){
+			// Ignore the problem
+			retval = -1;
 		}
 		return retval;		
 	}

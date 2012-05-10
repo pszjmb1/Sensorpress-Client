@@ -67,7 +67,8 @@ public class ImportClient {
 
 	public static void main(String args[]) {
 		if (!(args.length == 6 || args.length == 8)) {
-			String output = "ImportClient imports Pywws CSV files "
+			String output = "Incorrect number of arguments: " + args.length +
+					"\nImportClient imports Pywws CSV files "
 					+ "from a directory into Sensorpress."
 					+ "\n@param uRL is the url to connect to"
 					+ "\n@param user is the username for the SP client"
@@ -81,7 +82,13 @@ public class ImportClient {
 			System.exit(1);
 		}
 		ImportClient ic = new ImportClient();
-		ic.runImport(args[0], args[1], args[2], Level.INFO,
-				Integer.valueOf(args[3]), Integer.valueOf(args[4]), args[5]);
+		if(args.length == 6){
+			ic.runImport(args[0], args[1], args[2], Level.INFO,
+					Integer.valueOf(args[3]), Integer.valueOf(args[4]), args[5]);
+		}else{
+			ic.runImportProxy(args[0], args[1], args[2], Level.INFO,
+					Integer.valueOf(args[3]), Integer.valueOf(args[4]), 
+					args[5],args[6],args[7]);			
+		}
 	}
 }
