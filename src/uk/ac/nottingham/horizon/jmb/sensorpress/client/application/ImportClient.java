@@ -1,12 +1,16 @@
 package uk.ac.nottingham.horizon.jmb.sensorpress.client.application;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpBaseClient;
 import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpPywwsImportClient;
 import uk.ac.nottingham.horizon.jmb.sensorpress.client.SpXMLRpcClient;
 
 public class ImportClient {
+	private final static Logger LOGGER = 
+			Logger.getLogger(ImportClient.class.getName());
+
 
 	/**
 	 * Driver to use the import client
@@ -28,6 +32,7 @@ public class ImportClient {
 	 */
 	public void runImport(String uRL, String user, String pwrd, Level level,
 			Integer devId, Integer infoId, String importDirectory) {
+		LOGGER.log(Level.INFO, "Importing " + importDirectory);
 		SpBaseClient base = new SpXMLRpcClient(user, pwrd, level);
 		base.simpleClient(uRL, true, true);
 		SpPywwsImportClient sc = new SpPywwsImportClient(base, level);
@@ -59,6 +64,7 @@ public class ImportClient {
 	public void runImportProxy(String uRL, String user, String pwrd,
 			Level level, Integer devId, Integer infoId, String importDirectory,
 			String proxyUrl, String proxyPort) {
+		LOGGER.log(Level.INFO, "Importing " + importDirectory);
 		SpBaseClient base = new SpXMLRpcClient(user, pwrd, level);
 		base.simpleClient(uRL, true, true);
 		SpPywwsImportClient sc = new SpPywwsImportClient(base, level);

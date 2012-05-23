@@ -225,6 +225,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 	 *         import, or null if complete import
 	 */
 	public String checkFileImport(Integer deviceId, String filename) {
+		LOGGER.log(Level.INFO, "Checking if " + filename + " has been imported...");
 		// Ensure that file hasn't been imported already
 		String lastrecord = getlastrecord(deviceId, filename);
 		String temp;
@@ -301,6 +302,7 @@ public class SpPywwsImportClient implements SpCsvImportClient {
 		String lastrecord = checkFileImport(deviceId, filename);
 		// If file was completely imported then exit this method
 		if (null == lastrecord) {
+			LOGGER.log(Level.INFO, filename + " has been imported.");
 			return null;
 		}
 

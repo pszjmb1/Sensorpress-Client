@@ -174,7 +174,7 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		Object[] exec = myClient.execute(
 				"sensorpress.latestReadingsetIdForDevice", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), device});
-		if(exec.length < 1){
+		if(null == exec || exec.length < 1){
 			return retval;
 		}
 		try{
@@ -197,7 +197,7 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 		Object[] exec = myClient.execute(
 				"sensorpress.latestReadingsetId", 
 				new Object[]{myClient.getUser(),myClient.getPwrd()});
-		if(exec.length < 1){
+		if(null == exec || exec.length < 1){
 			return retval;
 		}
 		try{
@@ -224,7 +224,7 @@ public class SpSelectionClientImpl implements SpSelectionClient {
 				"sensorpress.select_lastimportRecord", 
 				new Object[]{myClient.getUser(),myClient.getPwrd(), filename, device});
 		try{
-			if(exec.length < 1){
+			if(null == exec ||exec.length < 1){
 				return retval;
 			}
 			retval = exec[0].toString();
